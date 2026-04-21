@@ -68,16 +68,15 @@ This project includes a GitHub Actions workflow in `.github/workflows/pages.yml`
 After pushing to GitHub, open the repository settings, choose **Pages**, and set the
 source to **GitHub Actions**. Each push to `main` will build and publish `dist/`.
 
-If the repository is named `math-block-academy`, the webpage will be:
+For a project repository, the published webpage usually follows this pattern:
 
 ```text
-https://buicongnguyen.github.io/math-block-academy/
+https://YOUR_GITHUB_USERNAME.github.io/YOUR_REPOSITORY_NAME/
 ```
 
-PowerShell push command after creating the empty GitHub repository:
+Push command after creating an empty GitHub repository and setting `origin`:
 
-```powershell
-cd "C:\Users\n\Documents\Codex\2026-04-20-game-studio-plugin-game-studio-openai-2"
+```bash
 git push -u origin main
 ```
 
