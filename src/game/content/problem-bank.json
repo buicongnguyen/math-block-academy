@@ -1,0 +1,210 @@
+{
+  "g6-ratios-rates": {
+    "label": "ratios and rates",
+    "variable": "n",
+    "balance": "proportion",
+    "choice": "ratio",
+    "input": "unit-rate",
+    "context": "training course"
+  },
+  "g6-fractions-decimals": {
+    "label": "fractions and decimals",
+    "variable": "f",
+    "balance": "one-step",
+    "choice": "fraction-decimal",
+    "input": "fraction-divide",
+    "context": "recipe lab"
+  },
+  "g6-integers-coordinate": {
+    "label": "integers and coordinate plane",
+    "variable": "p",
+    "balance": "two-step",
+    "choice": "quadrant",
+    "input": "absolute",
+    "context": "coordinate map"
+  },
+  "g6-expressions-equations": {
+    "label": "expressions and equations",
+    "variable": "x",
+    "balance": "two-step",
+    "choice": "combine",
+    "input": "evaluate-expression",
+    "context": "expression workshop"
+  },
+  "g6-geometry-measure": {
+    "label": "geometry measurement",
+    "variable": "h",
+    "balance": "one-step",
+    "choice": "triangle-area",
+    "input": "volume",
+    "context": "design studio"
+  },
+  "g6-statistics-data": {
+    "label": "statistics and data",
+    "variable": "d",
+    "balance": "one-step",
+    "choice": "median",
+    "input": "mean",
+    "context": "data desk"
+  },
+  "g7-proportional-relationships": {
+    "label": "proportional relationships and percent",
+    "variable": "w",
+    "balance": "percent-equation",
+    "choice": "percent",
+    "input": "unit-rate",
+    "context": "shop challenge"
+  },
+  "g7-rational-number-operations": {
+    "label": "rational number operations",
+    "variable": "r",
+    "balance": "two-step",
+    "choice": "integer-product",
+    "input": "negative-division",
+    "context": "number line"
+  },
+  "g7-expressions-equations-inequalities": {
+    "label": "expressions, equations, and inequalities",
+    "variable": "m",
+    "balance": "inequality",
+    "choice": "inequality-solution",
+    "input": "inequality",
+    "context": "constraint lab"
+  },
+  "g7-scale-geometry": {
+    "label": "scale drawings and geometry",
+    "variable": "s",
+    "balance": "proportion",
+    "choice": "scale",
+    "input": "angle",
+    "context": "blueprint table"
+  },
+  "g7-circles-volume": {
+    "label": "circles, angles, surface area, and volume",
+    "variable": "r",
+    "balance": "one-step",
+    "choice": "circle",
+    "input": "circle-area",
+    "context": "circle lab"
+  },
+  "g7-probability-sampling": {
+    "label": "probability and sampling",
+    "variable": "p",
+    "balance": "proportion",
+    "choice": "probability",
+    "input": "probability",
+    "context": "sample station"
+  },
+  "g8-real-numbers-exponents": {
+    "label": "real numbers and exponents",
+    "variable": "x",
+    "balance": "square-root",
+    "choice": "root",
+    "input": "exponent",
+    "context": "radical vault"
+  },
+  "g8-linear-equations": {
+    "label": "linear equations",
+    "variable": "x",
+    "balance": "two-step",
+    "choice": "slope",
+    "input": "linear",
+    "context": "line lab"
+  },
+  "g8-systems-equations": {
+    "label": "systems of equations",
+    "variable": "x",
+    "balance": "two-step",
+    "choice": "system",
+    "input": "system",
+    "context": "intersection grid"
+  },
+  "g8-functions-graphs": {
+    "label": "functions and graphs",
+    "variable": "y",
+    "balance": "two-step",
+    "choice": "function",
+    "input": "function",
+    "context": "function machine"
+  },
+  "g8-transformations-similarity": {
+    "label": "transformations, congruence, and similarity",
+    "variable": "k",
+    "balance": "one-step",
+    "choice": "transformation",
+    "input": "translation",
+    "context": "transformation grid"
+  },
+  "g8-pythagorean-volume": {
+    "label": "Pythagorean theorem and volume",
+    "variable": "c",
+    "balance": "square-root",
+    "choice": "pythagorean",
+    "input": "pythagorean",
+    "context": "right-triangle tower"
+  },
+  "g8-bivariate-data": {
+    "label": "statistics and bivariate data",
+    "variable": "b",
+    "balance": "one-step",
+    "choice": "trend",
+    "input": "mean",
+    "context": "scatterplot studio"
+  },
+  "g9-structure-expressions": {
+    "label": "structure of expressions",
+    "variable": "a",
+    "balance": "two-step",
+    "choice": "distribute",
+    "input": "expression",
+    "context": "algebra forge"
+  },
+  "g9-linear-ineq": {
+    "label": "linear equations and inequalities",
+    "variable": "x",
+    "balance": "inequality",
+    "choice": "inequality-solution",
+    "input": "inequality",
+    "context": "inequality arena"
+  },
+  "g9-functions-graphing": {
+    "label": "functions and graphing",
+    "variable": "x",
+    "balance": "two-step",
+    "choice": "function",
+    "input": "function",
+    "context": "graph lab"
+  },
+  "g9-systems-modeling": {
+    "label": "systems and modeling",
+    "variable": "x",
+    "balance": "two-step",
+    "choice": "system",
+    "input": "model-rate",
+    "context": "modeling mission"
+  },
+  "g9-polynomials-exponents": {
+    "label": "polynomials and exponents",
+    "variable": "x",
+    "balance": "square-root",
+    "choice": "polynomial",
+    "input": "polynomial",
+    "context": "polynomial lab"
+  },
+  "g9-quadratics": {
+    "label": "quadratics",
+    "variable": "x",
+    "balance": "square-root",
+    "choice": "quadratic-roots",
+    "input": "quadratic",
+    "context": "quadratic vault"
+  },
+  "g9-modeling-data": {
+    "label": "algebraic modeling and data",
+    "variable": "t",
+    "balance": "two-step",
+    "choice": "model-rate",
+    "input": "model-rate",
+    "context": "data model hub"
+  }
+}

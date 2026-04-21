@@ -31,6 +31,19 @@ Then open the local URL that Vite prints, usually `http://localhost:5173`.
 npm run build
 ```
 
+## Refresh the lesson questions
+
+The course uses `src/game/content/problem-bank.json` plus a generator to reduce
+repeated formulas and repeated answer patterns.
+
+```bash
+npm run generate:content
+npm run validate:content
+```
+
+The validator fails if a chapter has too few unique formulas or if one formula
+appears too often in the same chapter.
+
 ## Preview the webpage build
 
 ```bash
