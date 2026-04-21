@@ -31,11 +31,42 @@ Then open the local URL that Vite prints, usually `http://localhost:5173`.
 npm run build
 ```
 
+## Preview the webpage build
+
+```bash
+npm run build
+npm run preview:local
+```
+
+Then open `http://127.0.0.1:4173`.
+
+To test from a phone on the same Wi-Fi network:
+
+```bash
+npm run build
+npm run preview:phone
+```
+
+Then open `http://YOUR_COMPUTER_IP:4173` on the phone.
+
 ## Deploy on GitHub Pages
 
 This project includes a GitHub Actions workflow in `.github/workflows/pages.yml`.
 After pushing to GitHub, open the repository settings, choose **Pages**, and set the
 source to **GitHub Actions**. Each push to `main` will build and publish `dist/`.
+
+If the repository is named `math-block-academy`, the webpage will be:
+
+```text
+https://buicongnguyen.github.io/math-block-academy/
+```
+
+PowerShell push command after creating the empty GitHub repository:
+
+```powershell
+cd "C:\Users\n\Documents\Codex\2026-04-20-game-studio-plugin-game-studio-openai-2"
+git push -u origin main
+```
 
 ## Project layout
 
