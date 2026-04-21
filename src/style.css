@@ -1,0 +1,844 @@
+:root {
+  color-scheme: dark;
+  --bg: #091817;
+  --panel: rgba(18, 38, 36, 0.95);
+  --panel-strong: rgba(26, 56, 52, 0.97);
+  --line: rgba(149, 216, 198, 0.28);
+  --text: #f6f1dc;
+  --muted: #b9d2ca;
+  --gold: #ffc96b;
+  --mint: #8fe0c4;
+  --coral: #ff8e6a;
+  --ink: #10211e;
+  --shadow: 0 24px 48px rgba(0, 0, 0, 0.28);
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background:
+    radial-gradient(circle at top left, rgba(255, 201, 107, 0.22), transparent 22%),
+    radial-gradient(circle at bottom right, rgba(143, 224, 196, 0.18), transparent 24%),
+    linear-gradient(135deg, #071312 0%, #0b1f1e 34%, #0f2726 100%);
+  color: var(--text);
+  font-family: "Trebuchet MS", "Avenir Next", "Segoe UI", sans-serif;
+  overflow: hidden;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+.mobile-nav {
+  display: none;
+}
+
+.app-shell {
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr) 360px;
+  gap: 20px;
+  height: 100vh;
+  padding: 16px;
+  overflow: hidden;
+}
+
+.left-rail,
+.center-stage,
+.right-desk {
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.left-rail {
+  display: grid;
+  grid-template-rows: auto minmax(0, 220px) minmax(0, 1fr);
+  gap: 16px;
+}
+
+.right-desk {
+  display: grid;
+  grid-template-rows: minmax(0, 240px) minmax(0, 1fr) minmax(0, 210px);
+  gap: 16px;
+}
+
+.brand-card,
+.panel,
+.overlay-card,
+.hud-chip {
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+
+.brand-card {
+  background: linear-gradient(155deg, rgba(255, 201, 107, 0.14), rgba(255, 142, 106, 0.08) 55%, rgba(143, 224, 196, 0.08));
+  border-radius: 28px;
+  padding: 20px;
+  margin-bottom: 0;
+}
+
+.brand-card h1 {
+  margin: 8px 0 10px;
+  font-family: "Rockwell", "Georgia", serif;
+  font-size: 2.1rem;
+  line-height: 1;
+}
+
+.brand-card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.eyebrow {
+  display: inline-block;
+  font-size: 0.74rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.panel {
+  background: var(--panel);
+  border-radius: 24px;
+  padding: 18px;
+  margin-bottom: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: flex-end;
+  margin-bottom: 14px;
+}
+
+.panel-header h2 {
+  margin: 0;
+  font-family: "Rockwell", "Georgia", serif;
+  font-size: 1.1rem;
+}
+
+.panel-header span,
+.meta-text {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.grade-grid,
+.chapter-list,
+.lesson-list,
+.choice-list {
+  display: grid;
+  gap: 12px;
+}
+
+.grade-grid,
+.chapter-list,
+.lesson-list,
+[data-slot="activity"],
+[data-slot="report"] {
+  min-height: 0;
+  overflow: auto;
+  padding-right: 4px;
+}
+
+.grade-card,
+.chapter-card,
+.lesson-card,
+.choice-button,
+.action-button,
+.ghost-button,
+.next-button,
+.mobile-back-button {
+  width: 100%;
+  border: 1px solid transparent;
+  border-radius: 20px;
+  cursor: pointer;
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    background 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.grade-card,
+.chapter-card,
+.lesson-card {
+  background: var(--panel-strong);
+  color: var(--text);
+  text-align: left;
+  padding: 16px;
+}
+
+.grade-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.grade-card.collapsed {
+  padding: 12px 14px;
+}
+
+.grade-card.collapsed p,
+.grade-card.collapsed .skill-row {
+  display: none;
+}
+
+.grade-card:hover,
+.chapter-card:hover,
+.lesson-card:hover,
+.choice-button:hover,
+.action-button:hover,
+.ghost-button:hover,
+.next-button:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+.selected {
+  border-color: rgba(255, 201, 107, 0.95);
+  box-shadow: 0 0 0 2px rgba(255, 201, 107, 0.18);
+}
+
+.locked {
+  opacity: 0.68;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+.focus-ring {
+  border-color: rgba(255, 201, 107, 0.95) !important;
+  box-shadow:
+    0 0 0 2px rgba(255, 201, 107, 0.24),
+    0 0 28px rgba(255, 201, 107, 0.18),
+    var(--shadow);
+  animation: focus-pulse 1.8s ease-in-out infinite;
+}
+
+.grade-card strong,
+.chapter-card strong,
+.lesson-card strong,
+.report-card-view h3,
+.activity-card h3,
+.overlay-card h2 {
+  font-family: "Rockwell", "Georgia", serif;
+}
+
+.grade-card p,
+.chapter-card p,
+.lesson-card p,
+.overlay-card p,
+.activity-card p,
+.report-card-view p {
+  margin: 8px 0 0;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.grade-label {
+  display: block;
+  color: var(--gold);
+  margin-bottom: 6px;
+}
+
+.chapter-title-row,
+.lesson-card-top,
+.lesson-card-bottom,
+.desk-actions,
+.overlay-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.overlay-meta {
+  flex-wrap: wrap;
+}
+
+.lesson-card-bottom {
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.skill-row,
+.report-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 6px 10px;
+  background: rgba(143, 224, 196, 0.14);
+  color: #dffff4;
+  font-size: 0.82rem;
+}
+
+.pill.warm {
+  background: rgba(255, 201, 107, 0.14);
+  color: #ffe4a5;
+}
+
+.pill.cool {
+  background: rgba(143, 224, 196, 0.18);
+  color: #d7fff4;
+}
+
+.center-stage {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  gap: 16px;
+  min-height: 0;
+}
+
+.guide-bar {
+  border-radius: 22px;
+  border: 1px solid rgba(255, 201, 107, 0.28);
+  background: linear-gradient(135deg, rgba(255, 201, 107, 0.16), rgba(255, 142, 106, 0.1));
+  box-shadow: var(--shadow);
+  padding: 14px 18px;
+}
+
+.guide-card {
+  display: grid;
+  gap: 4px;
+}
+
+.guide-card strong {
+  font-family: "Rockwell", "Georgia", serif;
+  font-size: 1rem;
+}
+
+.guide-card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.hud-strip {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.hud-chip {
+  background: rgba(18, 38, 36, 0.88);
+  border-radius: 20px;
+  padding: 14px 16px;
+}
+
+.chip-label {
+  display: block;
+  color: var(--muted);
+  font-size: 0.8rem;
+  margin-bottom: 4px;
+}
+
+.play-panel {
+  position: relative;
+  min-height: 0;
+  height: 100%;
+  border-radius: 28px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  background: rgba(10, 22, 22, 0.9);
+}
+
+.phaser-mount {
+  position: absolute;
+  inset: 0;
+}
+
+.stage-overlay {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 2;
+  max-width: min(380px, calc(100% - 32px));
+  pointer-events: none;
+}
+
+.stage-overlay.is-collapsed {
+  top: 12px;
+  left: auto;
+  right: 12px;
+  max-width: none;
+}
+
+.overlay-card {
+  background: rgba(13, 28, 27, 0.84);
+  border-radius: 24px;
+  padding: 18px;
+  pointer-events: auto;
+}
+
+.overlay-card h2 {
+  margin: 8px 0 10px;
+}
+
+.overlay-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.overlay-card.compact {
+  min-width: 230px;
+  padding: 12px 14px;
+}
+
+.overlay-card.compact strong {
+  display: block;
+  margin-top: 4px;
+  font-family: "Rockwell", "Georgia", serif;
+}
+
+.overlay-toggle,
+.overlay-peek-button {
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  background: rgba(8, 18, 18, 0.72);
+  color: var(--text);
+  padding: 8px 12px;
+  font-size: 0.82rem;
+  pointer-events: auto;
+}
+
+.overlay-peek-button {
+  width: auto;
+  min-width: 0;
+  min-height: 40px;
+  background: linear-gradient(135deg, rgba(255, 201, 107, 0.94), rgba(255, 142, 106, 0.94));
+  color: var(--ink);
+  font-weight: 800;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.24);
+}
+
+.overlay-meta {
+  margin-top: 14px;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.lesson-desk-panel,
+.report-panel {
+  min-height: 220px;
+}
+
+.activity-card,
+.report-card-view,
+.empty-state {
+  background: rgba(24, 50, 47, 0.7);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 16px;
+}
+
+.activity-card h3,
+.report-card-view h3,
+.empty-state h3 {
+  margin: 8px 0 10px;
+}
+
+.formula-callout,
+.instruction-box {
+  border-radius: 16px;
+  background: rgba(255, 201, 107, 0.1);
+  border: 1px solid rgba(255, 201, 107, 0.22);
+  padding: 12px 14px;
+  color: #fff2ca;
+}
+
+.instruction-box {
+  display: grid;
+  gap: 6px;
+  margin: 14px 0;
+}
+
+.choice-button {
+  background: rgba(143, 224, 196, 0.14);
+  color: var(--text);
+  padding: 12px 14px;
+  text-align: left;
+}
+
+.choice-button:hover {
+  background: rgba(143, 224, 196, 0.2);
+}
+
+.answer-form {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  margin: 14px 0;
+}
+
+.answer-form input {
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(8, 18, 18, 0.72);
+  color: var(--text);
+  padding: 12px 14px;
+}
+
+.action-button,
+.next-button {
+  background: linear-gradient(135deg, #ffcb6d, #ff8e6a);
+  color: var(--ink);
+  padding: 12px 16px;
+  font-weight: 700;
+}
+
+.ghost-button {
+  background: rgba(143, 224, 196, 0.12);
+  border: 1px solid rgba(143, 224, 196, 0.28);
+  color: var(--text);
+  padding: 10px 14px;
+}
+
+.report-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.mobile-flow-bar {
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 201, 107, 0.22);
+  border-radius: 24px;
+  background: linear-gradient(160deg, rgba(16, 34, 33, 0.94), rgba(24, 50, 47, 0.94));
+  box-shadow: var(--shadow);
+  padding: 14px 16px;
+}
+
+.mobile-flow-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.mobile-back-button,
+.mobile-mode-pill {
+  width: auto;
+  border-radius: 999px;
+  padding: 9px 14px;
+  font-size: 0.82rem;
+}
+
+.mobile-back-button {
+  background: rgba(255, 201, 107, 0.16);
+  border: 1px solid rgba(255, 201, 107, 0.26);
+  color: var(--text);
+}
+
+.mobile-mode-pill {
+  display: inline-flex;
+  align-items: center;
+  color: #ffe4a5;
+  background: rgba(255, 201, 107, 0.12);
+  border: 1px solid rgba(255, 201, 107, 0.18);
+}
+
+.mobile-context {
+  color: var(--muted);
+  font-size: 0.88rem;
+  text-align: right;
+}
+
+.mobile-flow-copy {
+  display: grid;
+  gap: 4px;
+  margin-top: 12px;
+}
+
+.mobile-flow-copy strong {
+  font-family: "Rockwell", "Georgia", serif;
+  font-size: 1.06rem;
+}
+
+.mobile-flow-copy p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.mobile-step-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.mobile-step-pill {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 7px 11px;
+  background: rgba(143, 224, 196, 0.08);
+  border: 1px solid rgba(143, 224, 196, 0.12);
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.mobile-step-pill.active {
+  background: rgba(255, 201, 107, 0.16);
+  border-color: rgba(255, 201, 107, 0.34);
+  color: #fff1c8;
+}
+
+.mobile-step-pill.done {
+  background: rgba(143, 224, 196, 0.16);
+  border-color: rgba(143, 224, 196, 0.24);
+  color: #d7fff4;
+}
+
+.feedback-text {
+  min-height: 3.4em;
+  color: #ffe8b0;
+}
+
+@keyframes focus-pulse {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 2px rgba(255, 201, 107, 0.18),
+      0 0 18px rgba(255, 201, 107, 0.12),
+      var(--shadow);
+  }
+
+  50% {
+    box-shadow:
+      0 0 0 2px rgba(255, 201, 107, 0.3),
+      0 0 32px rgba(255, 201, 107, 0.24),
+      var(--shadow);
+  }
+}
+
+@media (max-width: 1320px) {
+  .app-shell {
+    grid-template-columns: 280px minmax(0, 1fr);
+  }
+
+  .right-desk {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-rows: none;
+    gap: 16px;
+  }
+
+  .right-desk .panel {
+    margin-bottom: 0;
+  }
+}
+
+@media (max-width: 900px) {
+  body {
+    overflow: auto;
+  }
+
+  .mobile-nav {
+    display: block;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    padding: calc(var(--safe-top) + 12px) 12px 0;
+  }
+
+  .app-shell {
+    display: block;
+    height: auto;
+    min-height: calc(100vh - var(--safe-top));
+    padding: 12px 12px calc(22px + var(--safe-bottom));
+    overflow: visible;
+  }
+
+  .left-rail,
+  .center-stage,
+  .right-desk {
+    display: contents;
+  }
+
+  .welcome-card,
+  .grades-panel,
+  .chapters-panel,
+  .lessons-panel,
+  .center-stage,
+  .lesson-desk-panel,
+  .report-panel {
+    display: none;
+    margin-bottom: 14px;
+  }
+
+  .app-shell[data-mobile-screen="grades"] .welcome-card {
+    display: block;
+  }
+
+  .app-shell[data-mobile-screen="grades"] .grades-panel,
+  .app-shell[data-mobile-screen="chapters"] .chapters-panel,
+  .app-shell[data-mobile-screen="lessons"] .lessons-panel,
+  .app-shell[data-mobile-screen="play"] .lesson-desk-panel,
+  .app-shell[data-mobile-screen="report"] .report-panel {
+    display: flex;
+  }
+
+  .app-shell[data-mobile-screen="play"] .center-stage {
+    display: grid;
+  }
+
+  .guide-bar {
+    display: none;
+  }
+
+  .hud-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .left-rail,
+  .center-stage,
+  .right-desk,
+  .grade-grid,
+  .chapter-list,
+  .lesson-list,
+  [data-slot="activity"],
+  [data-slot="report"] {
+    overflow: visible;
+  }
+
+  .grade-card,
+  .chapter-card,
+  .lesson-card,
+  .choice-button,
+  .action-button,
+  .ghost-button,
+  .next-button,
+  .mobile-back-button {
+    min-height: 48px;
+  }
+
+  .play-panel {
+    min-height: min(62vh, 560px);
+    height: auto;
+    border-radius: 24px;
+  }
+
+  .phaser-mount {
+    position: relative;
+    min-height: min(62vh, 560px);
+  }
+
+  .stage-overlay {
+    position: static;
+    max-width: none;
+    padding: 12px 0 0;
+  }
+
+  .stage-overlay.is-collapsed {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    left: auto;
+    padding: 0;
+    max-width: none;
+  }
+
+  .overlay-card.compact {
+    min-width: 0;
+  }
+
+  .answer-form {
+    grid-template-columns: 1fr;
+  }
+
+  .panel-header {
+    align-items: flex-start;
+  }
+
+  .report-actions {
+    display: grid;
+  }
+}
+
+@media (max-width: 560px) {
+  .mobile-nav {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .app-shell {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .brand-card,
+  .panel,
+  .overlay-card {
+    border-radius: 22px;
+  }
+
+  .brand-card h1 {
+    font-size: 1.8rem;
+  }
+
+  .hud-strip {
+    grid-template-columns: 1fr;
+  }
+
+  .mobile-flow-top {
+    align-items: flex-start;
+  }
+
+  .mobile-context {
+    max-width: 52%;
+    line-height: 1.35;
+  }
+
+  .play-panel,
+  .phaser-mount {
+    min-height: min(56vh, 500px);
+  }
+
+  .overlay-card,
+  .overlay-card.compact {
+    padding: 14px;
+  }
+
+  .overlay-peek-button {
+    min-height: 36px;
+    padding: 8px 11px;
+    font-size: 0.78rem;
+  }
+}

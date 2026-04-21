@@ -1,0 +1,20 @@
+{
+  "name": "Math Block Academy",
+  "short_name": "Math Blocks",
+  "description": "A middle school math adventure with chapter trees, puzzle boards, practice lessons, and boss exams.",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#091817",
+  "theme_color": "#0b1f1e",
+  "categories": ["education", "games"],
+  "icons": [
+    {
+      "src": "icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

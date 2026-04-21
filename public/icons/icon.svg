@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0%" x2="100%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#123834"/>
+      <stop offset="55%" stop-color="#0f2726"/>
+      <stop offset="100%" stop-color="#071312"/>
+    </linearGradient>
+    <linearGradient id="glow" x1="0%" x2="100%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffc96b"/>
+      <stop offset="100%" stop-color="#ff8e6a"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="120" fill="url(#bg)"/>
+  <rect x="44" y="44" width="424" height="424" rx="92" fill="none" opacity="0.32" stroke="#8fe0c4" stroke-width="10"/>
+  <g opacity="0.18" stroke="#8fe0c4" stroke-width="6">
+    <path d="M104 128h304"/>
+    <path d="M104 208h304"/>
+    <path d="M104 288h304"/>
+    <path d="M104 368h304"/>
+    <path d="M144 96v320"/>
+    <path d="M224 96v320"/>
+    <path d="M304 96v320"/>
+    <path d="M384 96v320"/>
+  </g>
+  <rect x="112" y="118" width="288" height="116" rx="30" fill="#1c4a45" stroke="#8fe0c4" stroke-width="10"/>
+  <rect x="112" y="278" width="132" height="100" rx="26" fill="#ffc96b"/>
+  <rect x="268" y="278" width="132" height="100" rx="26" fill="#8fe0c4"/>
+  <text x="256" y="192" fill="#f6f1dc" font-family="Rockwell, Georgia, serif" font-size="64" font-weight="700" text-anchor="middle">x + 3</text>
+  <text x="256" y="256" fill="url(#glow)" font-family="Rockwell, Georgia, serif" font-size="52" font-weight="700" text-anchor="middle">=</text>
+  <text x="178" y="342" fill="#10211e" font-family="Trebuchet MS, Avenir Next, sans-serif" font-size="54" font-weight="700" text-anchor="middle">-3</text>
+  <text x="334" y="342" fill="#10211e" font-family="Trebuchet MS, Avenir Next, sans-serif" font-size="54" font-weight="700" text-anchor="middle">8</text>
+  <text x="256" y="432" fill="#f6f1dc" font-family="Trebuchet MS, Avenir Next, sans-serif" font-size="32" font-weight="700" letter-spacing="6" text-anchor="middle">MATH BLOCK ACADEMY</text>
+</svg>
