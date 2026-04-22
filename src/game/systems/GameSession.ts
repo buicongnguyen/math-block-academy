@@ -92,6 +92,28 @@ export interface SessionViewModel {
     lessonCount: number;
     unlockLabel: string;
   };
+  learningTree: Array<{
+    id: string;
+    chapterNumber: number;
+    title: string;
+    theme: string;
+    planLabel: string;
+    masteryLabel: string;
+    statusLabel: string;
+    lessonCount: number;
+    selected: boolean;
+    lessons: Array<{
+      id: string;
+      lessonNumber: number;
+      title: string;
+      objective: string;
+      modeLabel: string;
+      estimatedMinutes: number;
+      selected: boolean;
+      statusLabel: string;
+      categoryLabel: string;
+    }>;
+  }>;
   lessonCards: Array<{
     id: string;
     title: string;
@@ -455,6 +477,33 @@ export class GameSession {
             : "Replay the boss exam for Proficient or better"
           : "Open exploration mode",
       },
+      learningTree: selectedGrade.chapters.map((chapter, chapterIndex) => {
+        const results = chapter.lessons.map((lesson) => this.results.get(lesson.id)).filter(Boolean) as LessonResult[];
+        const totalPlanned = chapter.levelPlan.guided + chapter.levelPlan.practice + chapter.levelPlan.mastery + chapter.levelPlan.boss;
+
+        return {
+          id: chapter.id,
+          chapterNumber: chapterIndex + 1,
+          title: chapter.title,
+          theme: chapter.theme,
+          planLabel: `${totalPlanned} lessons`,
+          masteryLabel: masterySummary(results),
+          statusLabel: this.getChapterStatusLabel(chapter),
+          lessonCount: chapter.lessons.length,
+          selected: chapter.id === selectedChapter.id,
+          lessons: chapter.lessons.map((lesson, lessonIndex) => ({
+            id: lesson.id,
+            lessonNumber: lessonIndex + 1,
+            title: lesson.title,
+            objective: lesson.objective,
+            modeLabel: lesson.modeLabel,
+            estimatedMinutes: lesson.estimatedMinutes,
+            selected: lesson.id === activeLesson?.id,
+            statusLabel: lessonStatusLabel(this.results.get(lesson.id)),
+            categoryLabel: categoryLabel(lesson.category),
+          })),
+        };
+      }),
       lessonCards: selectedChapter.lessons.map((lesson, lessonIndex) => {
         return {
           id: lesson.id,
@@ -800,8 +849,8 @@ export class GameSession {
     if (!activeLesson || !runtime || !currentActivity) {
       return {
         stepLabel: "Step 3 of 5",
-        title: "Choose a Lesson",
-        body: "Select any lesson card to begin. You can follow the order or jump around to practice.",
+        title: "Choose a Lesson Node",
+        body: "Use the learning tree: open a chapter branch, then select any lesson node to begin.",
         area: "lessons",
       };
     }

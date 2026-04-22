@@ -67,8 +67,8 @@ export function createAppShell(root: HTMLElement, handlers: ShellHandlers): AppS
       <aside class="right-desk">
         <section class="panel lessons-panel" data-mobile-page="lessons">
           <div class="panel-header">
-            <h2>Course Lessons</h2>
-            <span>Guided, practice, checkpoint, review, and boss lessons</span>
+            <h2>Learning Tree</h2>
+            <span>Chapter branches and playable lesson nodes</span>
           </div>
           <div class="lesson-list" data-slot="lessons"></div>
         </section>
@@ -240,26 +240,14 @@ export function createAppShell(root: HTMLElement, handlers: ShellHandlers): AppS
       });
     });
 
-    lessonsSlot.innerHTML = view.lessonCards
-      .map(
-        (lesson) => `
-          <button class="lesson-card ${lesson.selected ? "selected" : ""} ${lesson.locked ? "locked" : ""}" data-lesson-id="${lesson.id}" ${lesson.locked ? "disabled" : ""}>
-            <div class="lesson-card-top">
-              <strong>${lesson.title}</strong>
-              <span class="pill cool">${lesson.modeLabel}</span>
-            </div>
-            <p>${lesson.objective}</p>
-            <div class="skill-row">
-              <span class="pill">${lesson.categoryLabel}</span>
-            </div>
-            <div class="lesson-card-bottom">
-              <span>${lesson.estimatedMinutes} min</span>
-              <span>${lesson.statusLabel}</span>
-            </div>
-          </button>
-        `,
-      )
-      .join("");
+    lessonsSlot.innerHTML = renderLearningTree(view);
+
+    lessonsSlot.querySelectorAll<HTMLElement>("[data-tree-chapter-id]").forEach((button) => {
+      button.addEventListener("click", () => {
+        mobileScreenOverride = "lessons";
+        handlers.onSelectChapter(button.dataset.treeChapterId ?? "");
+      });
+    });
 
     lessonsSlot.querySelectorAll<HTMLElement>("[data-lesson-id]").forEach((button) => {
       button.addEventListener("click", () => {
@@ -377,12 +365,62 @@ export function createAppShell(root: HTMLElement, handlers: ShellHandlers): AppS
   };
 }
 
+function renderLearningTree(view: SessionViewModel): string {
+  return `
+    <div class="learning-tree" aria-label="${view.selectedGrade.label} chapter and lesson tree">
+      <div class="tree-map-header">
+        <span class="eyebrow">${view.selectedGrade.label} Map</span>
+        <p>Tap a chapter root to open its branch, then choose any lesson node.</p>
+      </div>
+      ${view.learningTree
+        .map(
+          (chapter) => `
+            <article class="tree-chapter ${chapter.selected ? "selected" : "collapsed"}">
+              <button class="tree-chapter-node" data-tree-chapter-id="${chapter.id}" aria-expanded="${chapter.selected}">
+                <span class="tree-node-marker">${chapter.chapterNumber}</span>
+                <span class="tree-node-copy">
+                  <strong>${chapter.title}</strong>
+                  <small>${chapter.statusLabel} • ${chapter.masteryLabel}</small>
+                </span>
+                <span class="tree-node-count">${chapter.lessonCount}</span>
+              </button>
+              ${
+                chapter.selected
+                  ? `
+                    <div class="tree-branches">
+                      ${chapter.lessons
+                        .map(
+                          (lesson) => `
+                            <button class="tree-lesson-node ${lesson.selected ? "selected" : ""}" data-lesson-id="${lesson.id}">
+                              <span class="tree-line" aria-hidden="true"></span>
+                              <span class="tree-node-dot" data-category="${lesson.categoryLabel.toLowerCase()}">${lesson.lessonNumber}</span>
+                              <span class="tree-node-copy">
+                                <strong>${lesson.title}</strong>
+                                <small>${lesson.categoryLabel} • ${lesson.modeLabel} • ${lesson.statusLabel}</small>
+                              </span>
+                              <span class="tree-time">${lesson.estimatedMinutes}m</span>
+                            </button>
+                          `,
+                        )
+                        .join("")}
+                    </div>
+                  `
+                  : `<p class="tree-collapsed-note">${chapter.planLabel} • ${chapter.theme}</p>`
+              }
+            </article>
+          `,
+        )
+        .join("")}
+    </div>
+  `;
+}
+
 function renderActivity(view: SessionViewModel): string {
   if (!view.activeLesson) {
     return `
       <div class="empty-state">
         <h3>Start a Course Lesson</h3>
-        <p>Pick any lesson to load the Phaser board and the lesson desk.</p>
+        <p>Pick any lesson node in the learning tree to load the Phaser board and the lesson desk.</p>
         <div class="skill-row">${view.selectedGrade.targetSkills.map((skill) => `<span class="pill">${skill}</span>`).join("")}</div>
       </div>
     `;
@@ -613,8 +651,8 @@ function getMobileHeader(view: SessionViewModel, screen: MobileScreen): { stepLa
     case "lessons":
       return {
         stepLabel: "Step 3 of 5",
-        title: view.selectedChapter.title,
-        body: "Choose any lesson, or follow the sequence toward the review relay and boss exam.",
+        title: "Learning Tree",
+        body: "Open a chapter branch, then choose any lesson node. The current chapter stays expanded.",
       };
     case "play":
       return {
@@ -640,7 +678,7 @@ function mobileStepLabel(screen: MobileScreen): string {
     case "chapters":
       return "Chapter";
     case "lessons":
-      return "Lesson";
+      return "Tree";
     case "play":
       return "Play";
     case "report":
