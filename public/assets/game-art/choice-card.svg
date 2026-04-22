@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 100" role="img" aria-label="Answer choice card">
+  <defs>
+    <linearGradient id="choice" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffe09a"/>
+      <stop offset="0.58" stop-color="#ffc96b"/>
+      <stop offset="1" stop-color="#ff9a76"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-30%" width="140%" height="160%">
+      <feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#000000" flood-opacity="0.26"/>
+    </filter>
+  </defs>
+  <rect x="8" y="8" width="244" height="84" rx="22" fill="url(#choice)" filter="url(#shadow)"/>
+  <rect x="15" y="15" width="230" height="70" rx="18" fill="none" stroke="#fff6d4" stroke-opacity="0.72" stroke-width="3"/>
+  <path d="M30 72c58-20 127-20 202 0" fill="none" stroke="#2f2712" stroke-opacity="0.12" stroke-width="7" stroke-linecap="round"/>
+</svg>

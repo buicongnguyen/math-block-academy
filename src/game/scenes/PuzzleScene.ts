@@ -17,6 +17,17 @@ export class PuzzleScene extends Phaser.Scene {
     super("PuzzleScene");
   }
 
+  preload(): void {
+    this.load.svg("academy-backdrop", "assets/game-art/academy-backdrop.svg", { width: 960, height: 620 });
+    this.load.svg("term-variable", "assets/game-art/term-variable.svg", { width: 240, height: 128 });
+    this.load.svg("term-constant", "assets/game-art/term-constant.svg", { width: 240, height: 128 });
+    this.load.svg("term-formula", "assets/game-art/term-formula.svg", { width: 240, height: 128 });
+    this.load.svg("term-neutral", "assets/game-art/term-neutral.svg", { width: 240, height: 128 });
+    this.load.svg("choice-card", "assets/game-art/choice-card.svg", { width: 260, height: 100 });
+    this.load.svg("lesson-orb", "assets/game-art/lesson-orb.svg", { width: 160, height: 160 });
+    this.load.svg("boss-badge", "assets/game-art/boss-badge.svg", { width: 180, height: 180 });
+  }
+
   create(): void {
     this.cameras.main.setBackgroundColor("#112826");
     this.handleResize = () => this.renderScene();
@@ -51,6 +62,14 @@ export class PuzzleScene extends Phaser.Scene {
   private drawBackdrop(): void {
     const width = this.scale.width;
     const height = this.scale.height;
+
+    if (this.textures.exists("academy-backdrop")) {
+      const backdrop = this.add.image(width / 2, height / 2, "academy-backdrop");
+      backdrop.setDisplaySize(width, height);
+      this.track(backdrop);
+      return;
+    }
+
     const graphics = this.add.graphics();
 
     graphics.fillStyle(0x112826, 1);
@@ -84,6 +103,15 @@ export class PuzzleScene extends Phaser.Scene {
   private drawAmbientBoard(): void {
     const width = this.scale.width;
     const height = this.scale.height;
+    const badgeKey = this.currentPayload.mode === "complete" ? "boss-badge" : "lesson-orb";
+
+    if (this.textures.exists(badgeKey)) {
+      const badge = this.add.image(width / 2, Math.max(210, height / 2 - 128), badgeKey);
+      badge.setDisplaySize(88, 88);
+      badge.setAlpha(0.92);
+      this.track(badge);
+    }
+
     const headline = this.add.text(width / 2, 120, this.currentPayload.headline, {
       fontFamily: "Rockwell, Georgia, serif",
       fontSize: "36px",
@@ -229,8 +257,10 @@ export class PuzzleScene extends Phaser.Scene {
     terms.forEach((term, index) => {
       const x = startX + index * (cardWidth + gap);
       const color = toneColor(term.tone);
-      const card = this.add.rectangle(x, centerY, cardWidth, 62, color.fill, 1);
-      card.setStrokeStyle(2, color.stroke, 1);
+      const assetKey = termAssetKey(term.tone);
+      const card = this.textures.exists(assetKey)
+        ? this.add.image(x, centerY, assetKey).setDisplaySize(cardWidth, 62)
+        : this.add.rectangle(x, centerY, cardWidth, 62, color.fill, 1).setStrokeStyle(2, color.stroke, 1);
       const text = this.add.text(x, centerY, term.label, {
         fontFamily: "Trebuchet MS, Avenir Next, sans-serif",
         fontSize: "22px",
@@ -253,8 +283,17 @@ export class PuzzleScene extends Phaser.Scene {
     label: string,
     summary: string,
   ): void {
-    const card = this.add.rectangle(centerX, centerY, width, height, 0xffcb66, 0.98);
-    card.setStrokeStyle(3, 0xf5f1d6, 0.95);
+    let cardArt: Phaser.GameObjects.Image | null = null;
+    if (this.textures.exists("choice-card")) {
+      cardArt = this.add.image(centerX, centerY, "choice-card");
+      cardArt.setDisplaySize(width, height);
+      this.track(cardArt);
+    }
+
+    const card = this.add.rectangle(centerX, centerY, width, height, cardArt ? 0xffffff : 0xffcb66, cardArt ? 0.001 : 0.98);
+    if (!cardArt) {
+      card.setStrokeStyle(3, 0xf5f1d6, 0.95);
+    }
     card.setInteractive({ useHandCursor: true });
 
     const labelText = this.add.text(centerX, centerY - 16, label, {
@@ -276,10 +315,18 @@ export class PuzzleScene extends Phaser.Scene {
     summaryText.setOrigin(0.5);
 
     card.on("pointerover", () => {
-      card.setFillStyle(0xffda88, 1);
+      if (cardArt) {
+        cardArt.setTint(0xfff1c8);
+      } else {
+        card.setFillStyle(0xffda88, 1);
+      }
     });
     card.on("pointerout", () => {
-      card.setFillStyle(0xffcb66, 0.98);
+      if (cardArt) {
+        cardArt.clearTint();
+      } else {
+        card.setFillStyle(0xffcb66, 0.98);
+      }
     });
     card.on("pointerdown", () => {
       appBridge.emit("equation-option-selected", { optionId });
@@ -322,5 +369,18 @@ function toneColor(tone: TermToken["tone"]): { fill: number; stroke: number } {
       return { fill: 0xff8f6b, stroke: 0xffe0d7 };
     default:
       return { fill: 0xd9efea, stroke: 0xf8fffd };
+  }
+}
+
+function termAssetKey(tone: TermToken["tone"]): string {
+  switch (tone) {
+    case "variable":
+      return "term-variable";
+    case "constant":
+      return "term-constant";
+    case "formula":
+      return "term-formula";
+    default:
+      return "term-neutral";
   }
 }

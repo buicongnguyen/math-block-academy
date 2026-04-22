@@ -1,6 +1,16 @@
-const CACHE_NAME = "math-block-academy-shell-v7";
+const CACHE_NAME = "math-block-academy-shell-v8";
 const BASE_URL = new URL("./", self.location.href).pathname;
-const APP_SHELL = [BASE_URL, `${BASE_URL}manifest.webmanifest`, `${BASE_URL}icons/icon.svg`];
+const GAME_ART = [
+  "academy-backdrop.svg",
+  "boss-badge.svg",
+  "choice-card.svg",
+  "lesson-orb.svg",
+  "term-constant.svg",
+  "term-formula.svg",
+  "term-neutral.svg",
+  "term-variable.svg",
+].map((filename) => `${BASE_URL}assets/game-art/${filename}`);
+const APP_SHELL = [BASE_URL, `${BASE_URL}manifest.webmanifest`, `${BASE_URL}icons/icon.svg`, ...GAME_ART];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(

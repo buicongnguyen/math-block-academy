@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "generate:assets": "node scripts/generate-game-assets.mjs",
     "generate:content": "node scripts/regenerate-content.mjs",
     "validate:content": "node scripts/validate-content.mjs",
     "build": "npm run validate:content && tsc && vite build",

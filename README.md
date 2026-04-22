@@ -31,6 +31,14 @@ Then open the local URL that Vite prints, usually `http://localhost:5173`.
 npm run build
 ```
 
+## Refresh the game assets
+
+The board art and token SVGs are generated into `public/assets/game-art/`.
+
+```bash
+npm run generate:assets
+```
+
 ## Refresh the lesson questions
 
 The course uses `src/game/content/problem-bank.json` plus a generator to reduce
@@ -85,6 +93,7 @@ git push -u origin main
 ## Project layout
 
 - `docs/` design documents
+- `public/assets/game-art/` generated SVG game assets
 - `src/game/content/` JSON course content and problem data
 - `src/game/data/` curriculum TypeScript types and content loader
 - `src/game/scenes/` Phaser rendering

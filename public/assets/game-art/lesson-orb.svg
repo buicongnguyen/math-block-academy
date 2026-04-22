@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-label="Lesson energy orb">
+  <defs>
+    <radialGradient id="orb" cx="0.35" cy="0.28" r="0.75">
+      <stop offset="0" stop-color="#f6f1dc"/>
+      <stop offset="0.42" stop-color="#8fe0c4"/>
+      <stop offset="1" stop-color="#0f4b45"/>
+    </radialGradient>
+    <filter id="glow" x="-35%" y="-35%" width="170%" height="170%">
+      <feGaussianBlur stdDeviation="7" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <circle cx="80" cy="80" r="54" fill="#8fe0c4" opacity="0.28" filter="url(#glow)"/>
+  <circle cx="80" cy="80" r="40" fill="url(#orb)" stroke="#dffff4" stroke-opacity="0.8" stroke-width="4"/>
+  <path d="M58 82l16 16 32-42" fill="none" stroke="#10211e" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
