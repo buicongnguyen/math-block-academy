@@ -244,8 +244,13 @@ export function createAppShell(root: HTMLElement, handlers: ShellHandlers): AppS
 
     lessonsSlot.querySelectorAll<HTMLElement>("[data-tree-chapter-id]").forEach((button) => {
       button.addEventListener("click", () => {
+        const chapterId = button.dataset.treeChapterId;
+        if (!chapterId || chapterId === currentView?.selectedChapter.id) {
+          return;
+        }
+
         mobileScreenOverride = "lessons";
-        handlers.onSelectChapter(button.dataset.treeChapterId ?? "");
+        handlers.onSelectChapter(chapterId);
       });
     });
 
@@ -375,7 +380,7 @@ function renderLearningTree(view: SessionViewModel): string {
       ${view.learningTree
         .map(
           (chapter) => `
-            <article class="tree-chapter ${chapter.selected ? "selected" : "collapsed"}">
+            <article class="tree-chapter ${chapter.selected ? "active-branch" : "collapsed"}">
               <button class="tree-chapter-node" data-tree-chapter-id="${chapter.id}" aria-expanded="${chapter.selected}">
                 <span class="tree-node-marker">${chapter.chapterNumber}</span>
                 <span class="tree-node-copy">

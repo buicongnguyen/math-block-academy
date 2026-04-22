@@ -330,7 +330,7 @@ button:disabled {
   padding: 13px 14px;
 }
 
-.tree-chapter.selected .tree-chapter-node {
+.tree-chapter.active-branch .tree-chapter-node {
   border-color: rgba(255, 201, 107, 0.88);
   background: linear-gradient(135deg, rgba(255, 201, 107, 0.17), rgba(24, 50, 47, 0.86));
   box-shadow: 0 0 0 2px rgba(255, 201, 107, 0.12);
