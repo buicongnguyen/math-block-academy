@@ -42,7 +42,9 @@ npm run validate:content
 ```
 
 The validator fails if a chapter has too few unique formulas or if one formula
-appears too often in the same chapter.
+appears too often in the same chapter. It also checks that generated tricky
+questions have 2-4 thinking steps and that their computed answers match the
+stored correct answer.
 
 ## Preview the webpage build
 

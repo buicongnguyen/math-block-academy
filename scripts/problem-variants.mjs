@@ -70,6 +70,10 @@ function rebuildActivity(activity, bank, chapter, lesson, nextSerial) {
 }
 
 function makeActivity(kind, bank, chapter, lesson, seed, prefix) {
+  if (shouldUseTrickyActivity(kind, lesson)) {
+    return makeTrickyActivity(kind, bank, chapter, lesson, seed, prefix);
+  }
+
   if (kind === "equation-balance") {
     return makeEquationActivity(bank, chapter, lesson, seed, prefix);
   }
@@ -79,6 +83,181 @@ function makeActivity(kind, bank, chapter, lesson, seed, prefix) {
   }
 
   return makeInputActivity(bank, chapter, lesson, seed, prefix);
+}
+
+function shouldUseTrickyActivity(kind, lesson) {
+  if (kind !== "multiple-choice" && kind !== "input") {
+    return false;
+  }
+
+  return (
+    lesson.category === "mastery" ||
+    lesson.category === "boss" ||
+    lesson.id.includes("checkpoint") ||
+    lesson.id.includes("review-relay")
+  );
+}
+
+function makeTrickyActivity(kind, bank, chapter, lesson, seed, prefix) {
+  const challenge = makeTrickyChallenge(bank, chapter, seed);
+
+  if (kind === "multiple-choice") {
+    return {
+      kind: "multiple-choice",
+      difficulty: "tricky",
+      thinkingSteps: challenge.thinkingSteps,
+      verification: challenge.verification,
+      prompt: withPrefix(prefix, `Tricky ${challenge.thinkingSteps.length}-step challenge: ${challenge.prompt}`),
+      formula: challenge.formula,
+      choices: sanitizeChoices(
+        [
+          choice("correct", challenge.answer),
+          choice("near-a", challenge.answer + challenge.offsetA),
+          choice("near-b", challenge.answer - challenge.offsetB),
+        ],
+        "correct",
+      ),
+      correctChoiceId: "correct",
+      explanation: challenge.explanation,
+      hint: challenge.hint,
+    };
+  }
+
+  return {
+    kind: "input",
+    difficulty: "tricky",
+    thinkingSteps: challenge.thinkingSteps,
+    verification: challenge.verification,
+    prompt: withPrefix(prefix, `Tricky ${challenge.thinkingSteps.length}-step challenge: ${challenge.prompt}`),
+    formula: challenge.formula,
+    acceptedAnswers: acceptedNumber(challenge.answer, "answer"),
+    placeholder: "Type the final answer",
+    explanation: challenge.explanation,
+    hint: challenge.hint,
+  };
+}
+
+function makeTrickyChallenge(bank, chapter, seed) {
+  const challengeType = mod(seed + chapter.id.length, 4);
+
+  if (challengeType === 0) {
+    return makeEarnSpendChallenge(bank, seed);
+  }
+
+  if (challengeType === 1) {
+    return makeShareAfterChangeChallenge(bank, seed);
+  }
+
+  if (challengeType === 2) {
+    return makeRectangleBorderChallenge(bank, seed);
+  }
+
+  return makeTwoRateChallenge(bank, seed);
+}
+
+function makeEarnSpendChallenge(bank, seed) {
+  const start = 18 + mod(seed * 5, 23);
+  const groups = 2 + mod(seed, 5);
+  const perGroup = 4 + mod(seed * 3, 9);
+  const bonus = 3 + mod(seed * 7, 10);
+  const spend = 2 + mod(seed * 4, 8);
+  const answer = start + groups * perGroup + bonus - spend;
+  const expression = `${start} + ${groups} * ${perGroup} + ${bonus} - ${spend}`;
+
+  return {
+    prompt: `In the ${bank.context}, a team starts with ${start} points, earns ${groups} groups of ${perGroup} points, gains a ${bonus}-point bonus, then spends ${spend} points. Find the final score.`,
+    formula: `${bank.label} challenge: start ${start}, add ${groups} groups, bonus ${bonus}, spend ${spend}`,
+    answer,
+    offsetA: groups,
+    offsetB: spend,
+    thinkingSteps: [
+      `Multiply ${groups} by ${perGroup} to find earned points.`,
+      "Add the earned points to the starting points.",
+      `Add the ${bonus}-point bonus.`,
+      `Subtract the ${spend} points spent.`,
+    ],
+    verification: { kind: "numeric-expression", expression, expected: String(answer) },
+    explanation: `${start} + ${groups} x ${perGroup} + ${bonus} - ${spend} = ${answer}.`,
+    hint: "Work in order: multiply, add, add, subtract.",
+  };
+}
+
+function makeShareAfterChangeChallenge(bank, seed) {
+  const groups = 2 + mod(seed, 4);
+  const answer = 5 + mod(seed * 3, 12);
+  const used = 3 + mod(seed * 5, 9);
+  const start = answer * groups + used;
+  const expression = `(${start} - ${used}) / ${groups}`;
+
+  return {
+    prompt: `A club in the ${bank.context} has ${start} tokens, uses ${used}, then splits the rest equally among ${groups} tables. How many tokens does each table get?`,
+    formula: `${bank.label} challenge: remove ${used}, then split by ${groups}`,
+    answer,
+    offsetA: groups,
+    offsetB: 1,
+    thinkingSteps: [
+      `Subtract ${used} from ${start}.`,
+      `Divide the remaining tokens by ${groups}.`,
+    ],
+    verification: { kind: "numeric-expression", expression, expected: String(answer) },
+    explanation: `(${start} - ${used}) / ${groups} = ${answer}.`,
+    hint: "Find what remains before dividing into equal groups.",
+  };
+}
+
+function makeRectangleBorderChallenge(bank, seed) {
+  const width = 3 + mod(seed, 8);
+  const length = width + 2 + mod(seed * 2, 7);
+  const extra = 4 + mod(seed * 5, 11);
+  const answer = 2 * (length + width) + extra;
+  const expression = `2 * (${length} + ${width}) + ${extra}`;
+
+  return {
+    prompt: `A rectangular board in the ${bank.context} is ${length} by ${width}. A border goes around it, then ${extra} extra units are added for a label strip. Find the total units needed.`,
+    formula: `${bank.label} challenge: rectangle ${length} by ${width}, plus label strip`,
+    answer,
+    offsetA: length,
+    offsetB: width,
+    thinkingSteps: [
+      `Add length and width: ${length} + ${width}.`,
+      "Double that sum to find the perimeter.",
+      `Add ${extra} units for the label strip.`,
+    ],
+    verification: { kind: "numeric-expression", expression, expected: String(answer) },
+    explanation: `2(${length} + ${width}) + ${extra} = ${answer}.`,
+    hint: "Find the perimeter first, then add the extra strip.",
+  };
+}
+
+function makeTwoRateChallenge(bank, seed) {
+  const firstRate = 2 + mod(seed, 7);
+  const firstTime = 2 + mod(seed * 2, 5);
+  const secondRate = firstRate + 1 + mod(seed * 3, 5);
+  const secondTime = 1 + mod(seed * 5, 4);
+  const adjustment = 3 + mod(seed * 7, 9);
+  const answer = firstRate * firstTime + secondRate * secondTime - adjustment;
+  const expression = `${firstRate} * ${firstTime} + ${secondRate} * ${secondTime} - ${adjustment}`;
+
+  return {
+    prompt: `During a ${bank.context} sprint, one machine makes ${firstRate} units for ${formatMinutes(firstTime)} and another makes ${secondRate} units for ${formatMinutes(secondTime)}. Then ${adjustment} units fail inspection. Find the usable total.`,
+    formula: `${bank.label} challenge: two rates, two times, subtract failures`,
+    answer,
+    offsetA: firstRate,
+    offsetB: adjustment,
+    thinkingSteps: [
+      `Multiply ${firstRate} by ${firstTime}.`,
+      `Multiply ${secondRate} by ${secondTime}.`,
+      "Add both production totals.",
+      `Subtract the ${adjustment} failed units.`,
+    ],
+    verification: { kind: "numeric-expression", expression, expected: String(answer) },
+    explanation: `${firstRate} x ${firstTime} + ${secondRate} x ${secondTime} - ${adjustment} = ${answer}.`,
+    hint: "Calculate each machine's output before subtracting failures.",
+  };
+}
+
+function formatMinutes(minutes) {
+  return `${minutes} ${minutes === 1 ? "minute" : "minutes"}`;
 }
 
 function makeEquationActivity(bank, chapter, lesson, seed, prefix) {

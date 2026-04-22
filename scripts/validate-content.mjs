@@ -10,6 +10,7 @@ const stats = {
   chapters: 0,
   lessons: 0,
   activities: 0,
+  trickyActivities: 0,
 };
 
 function mark(id, label) {
@@ -59,6 +60,7 @@ function collectActivities(lesson) {
 
 function validateActivity(activity, location) {
   stats.activities += 1;
+  validateTrickyChallenge(activity, location);
 
   if (!activity.formula) errors.push(`${location} missing formula.`);
   if (!activity.prompt) errors.push(`${location} missing prompt.`);
@@ -128,6 +130,65 @@ function validateAcceptedAnswers(activity, location) {
   }
 }
 
+function validateTrickyChallenge(activity, location) {
+  if (activity.difficulty !== "tricky") {
+    return;
+  }
+
+  stats.trickyActivities += 1;
+
+  if (!Array.isArray(activity.thinkingSteps) || activity.thinkingSteps.length < 2 || activity.thinkingSteps.length > 4) {
+    errors.push(`${location} tricky challenge must have 2 to 4 thinking steps.`);
+  }
+
+  const verification = activity.verification;
+  if (!verification || verification.kind !== "numeric-expression") {
+    errors.push(`${location} tricky challenge is missing numeric verification.`);
+    return;
+  }
+
+  const computedValue = evaluateNumericExpression(verification.expression, location);
+  if (computedValue === null) {
+    return;
+  }
+
+  const expectedValue = Number(verification.expected);
+  if (!Number.isFinite(expectedValue) || Math.abs(computedValue - expectedValue) > 1e-9) {
+    errors.push(`${location} verification mismatch: ${verification.expression} = ${computedValue}, expected ${verification.expected}.`);
+  }
+
+  if (activity.kind === "multiple-choice") {
+    const correctChoice = activity.choices?.find((entry) => entry.id === activity.correctChoiceId);
+    if (!correctChoice || Number(correctChoice.label) !== expectedValue) {
+      errors.push(`${location} tricky multiple-choice correct label does not match verified answer ${verification.expected}.`);
+    }
+  }
+
+  if (activity.kind === "input" && !(activity.acceptedAnswers ?? []).map(String).includes(String(verification.expected))) {
+    errors.push(`${location} tricky input does not accept verified answer ${verification.expected}.`);
+  }
+}
+
+function evaluateNumericExpression(expression, location) {
+  if (!/^[\d+\-*/().\s]+$/.test(expression)) {
+    errors.push(`${location} verification expression has unsupported characters.`);
+    return null;
+  }
+
+  try {
+    const value = Function(`"use strict"; return (${expression});`)();
+    if (!Number.isFinite(value)) {
+      errors.push(`${location} verification expression did not produce a finite number.`);
+      return null;
+    }
+
+    return value;
+  } catch {
+    errors.push(`${location} verification expression could not be evaluated.`);
+    return null;
+  }
+}
+
 for (const grade of curriculum) {
   mark(grade.id, "grade");
   for (const chapter of grade.chapters ?? []) {
@@ -135,6 +196,7 @@ for (const grade of curriculum) {
     mark(chapter.id, "chapter");
 
     const formulas = [];
+    let chapterTrickyActivities = 0;
     for (const lesson of chapter.lessons ?? []) {
       stats.lessons += 1;
       mark(lesson.id, "lesson");
@@ -142,6 +204,9 @@ for (const grade of curriculum) {
       const activities = collectActivities(lesson);
       activities.forEach((activity, index) => {
         formulas.push(normalize(activity.formula));
+        if (activity.difficulty === "tricky") {
+          chapterTrickyActivities += 1;
+        }
         validateActivity(activity, `${lesson.id}${activities.length > 1 ? ` round ${index + 1}` : ""}`);
       });
     }
@@ -158,6 +223,10 @@ for (const grade of curriculum) {
 
     if (maxShare > 0.25) {
       errors.push(`${chapter.id} repeats one formula ${maxFormulaCount}/${formulas.length} times; max allowed is 25%.`);
+    }
+
+    if (chapterTrickyActivities < 4) {
+      errors.push(`${chapter.id} only has ${chapterTrickyActivities} tricky activities; expected at least 4.`);
     }
   }
 }

@@ -40,7 +40,17 @@ export interface EquationActivity {
   explanation: string;
 }
 
-export interface ChoiceActivity {
+export interface VerifiedChallenge {
+  difficulty?: "tricky";
+  thinkingSteps?: string[];
+  verification?: {
+    kind: "numeric-expression";
+    expression: string;
+    expected: string;
+  };
+}
+
+export interface ChoiceActivity extends VerifiedChallenge {
   kind: "multiple-choice";
   prompt: string;
   formula: string;
@@ -53,7 +63,7 @@ export interface ChoiceActivity {
   hint: string;
 }
 
-export interface InputActivity {
+export interface InputActivity extends VerifiedChallenge {
   kind: "input";
   prompt: string;
   formula: string;
