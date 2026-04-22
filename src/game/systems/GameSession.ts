@@ -376,7 +376,7 @@ export class GameSession {
     return {
       mode: runtime.completed ? "complete" : activity.kind === "multiple-choice" ? "choice" : "input",
       headline: lesson.title,
-      subheading: `${this.getRoundLabel(lesson, runtime)} • ${activity.formula}`,
+      subheading: `${this.getRoundLabel(lesson, runtime)} • ${this.getSafeFormulaLabel(activity)}`,
       prompt: this.getActivePrompt(activity, runtime.equationStageIndex),
       feedback: runtime.feedback,
     };
@@ -473,7 +473,7 @@ export class GameSession {
             id: activeLesson.id,
             title: activeLesson.title,
             objective: activeLesson.objective,
-            formula: currentActivity.formula,
+            formula: this.getSafeFormulaLabel(currentActivity),
             modeLabel: activeLesson.modeLabel,
             prompt: this.getActivePrompt(currentActivity, runtime.equationStageIndex),
             placeholder: this.getActivePlaceholder(currentActivity, runtime.equationStageIndex),
@@ -481,7 +481,7 @@ export class GameSession {
             stepLabel: this.getStepLabel(currentActivity, runtime.equationStageIndex),
             roundLabel: this.getRoundLabel(activeLesson, runtime),
             feedback: runtime.feedback,
-            hintLabel: this.getHint(currentActivity, runtime.equationStageIndex),
+            hintLabel: runtime.hintsUsed > 0 ? "Hint shown in feedback" : "Hint available",
             completed: runtime.completed,
           }
         : null,
@@ -704,6 +704,20 @@ export class GameSession {
     }
 
     return activity.hint;
+  }
+
+  private getSafeFormulaLabel(activity: PlayableActivity): string {
+    if (activity.kind === "equation-balance") {
+      return activity.formula;
+    }
+
+    if (activity.formula.includes("=")) {
+      return activity.kind === "multiple-choice"
+        ? "Skill focus: reason from the prompt and compare choices"
+        : "Skill focus: solve from the prompt, then type the result";
+    }
+
+    return `Skill focus: ${activity.formula}`;
   }
 
   private getAcceptedAnswers(activity: PlayableActivity): string[] {

@@ -2,6 +2,10 @@ const choice = (id, label) => ({ id, label: String(label) });
 
 const mod = (seed, length) => ((seed % length) + length) % length;
 
+const unique = (values) => [...new Set(values.map(String))];
+
+const normalizeLabel = (value) => String(value).trim().toLowerCase().replace(/\s+/g, " ");
+
 const gcd = (a, b) => {
   let left = Math.abs(a);
   let right = Math.abs(b);
@@ -382,7 +386,7 @@ function makeInequalityEquation(bank, chapter, seed, prefix) {
       },
     ],
     finalPrompt: `What is the solution for ${variable}?`,
-    acceptedAnswers: [answer, answer.replace(/\s+/g, ""), `${variable}${direction}${boundary}`],
+    acceptedAnswers: unique([answer, answer.replace(/\s+/g, ""), `${variable}${direction}${boundary}`]),
     placeholder: `${variable} ${direction} ?`,
     explanation: `Subtract ${constant}, then divide by positive ${coefficient}, so ${answer}.`,
   };
@@ -440,11 +444,54 @@ function makeChoiceActivity(bank, chapter, lesson, seed, prefix) {
     kind: "multiple-choice",
     prompt: withPrefix(prefix, data.prompt),
     formula: data.formula,
-    choices: data.choices,
+    choices: sanitizeChoices(data.choices, data.correctChoiceId),
     correctChoiceId: data.correctChoiceId,
     explanation: data.explanation,
     hint: data.hint,
   };
+}
+
+function sanitizeChoices(choices, correctChoiceId) {
+  const correct = choices.find((entry) => entry.id === correctChoiceId) ?? choices[0];
+  const labels = new Set([normalizeLabel(correct.label)]);
+  const sanitized = [correct];
+
+  for (const entry of choices) {
+    if (entry.id === correct.id) {
+      continue;
+    }
+
+    const labelKey = normalizeLabel(entry.label);
+    if (labels.has(labelKey)) {
+      continue;
+    }
+
+    labels.add(labelKey);
+    sanitized.push(entry);
+  }
+
+  for (const label of fallbackChoiceLabels(correct.label)) {
+    if (sanitized.length >= 3) {
+      break;
+    }
+
+    const labelKey = normalizeLabel(label);
+    if (!labels.has(labelKey)) {
+      labels.add(labelKey);
+      sanitized.push(choice(`fallback-${sanitized.length}`, label));
+    }
+  }
+
+  return sanitized.slice(0, 3);
+}
+
+function fallbackChoiceLabels(correctLabel) {
+  const numericValue = Number(correctLabel);
+  if (Number.isFinite(numericValue)) {
+    return [numericValue + 1, numericValue - 1, numericValue * 2, 0];
+  }
+
+  return ["Cannot be determined", `Not ${correctLabel}`, "No association"];
 }
 
 function makeChoiceData(bank, chapter, seed) {
@@ -783,10 +830,11 @@ function trendChoice(seed) {
     ["points are scattered with no pattern", "no association"],
   ];
   const [description, answer] = trends[mod(seed, trends.length)];
+  const distractors = trends.map(([, label]) => label).filter((label) => label !== answer);
   return {
     prompt: `A scatterplot shows that ${description}. What association is shown?`,
     formula: description,
-    choices: [choice("correct", answer), choice("positive", "positive association"), choice("negative", "negative association")],
+    choices: [choice("correct", answer), choice("distractor-a", distractors[0]), choice("distractor-b", distractors[1])],
     correctChoiceId: "correct",
     explanation: `This pattern shows ${answer}.`,
     hint: "Look at the overall direction of the data.",
@@ -936,11 +984,12 @@ function fractionDivideInput(seed) {
   const numerator = 1 + mod(seed, 4);
   const denominator = numerator + 2 + mod(seed * 2, 5);
   const divisor = 2 + mod(seed, 4);
-  const answer = `${numerator}/${denominator * divisor}`;
+  const rawAnswer = `${numerator}/${denominator * divisor}`;
+  const simplifiedAnswer = simplify(numerator, denominator * divisor);
   return {
     prompt: `Type the result of (${numerator}/${denominator}) / ${divisor}.`,
-    formula: `(${numerator}/${denominator}) / ${divisor} = ${answer}`,
-    acceptedAnswers: [answer, `${numerator}/${denominator * divisor}`],
+    formula: `(${numerator}/${denominator}) / ${divisor} = ${simplifiedAnswer}`,
+    acceptedAnswers: unique([rawAnswer, simplifiedAnswer]),
     placeholder: "Fraction",
     explanation: `Dividing by ${divisor} multiplies the denominator by ${divisor}.`,
     hint: "Keep-change-flip for division.",
@@ -1064,7 +1113,7 @@ function probabilityInput(seed) {
   return {
     prompt: `Type the probability of drawing one of ${favorable} marked cards from ${total} cards.`,
     formula: `${favorable}/${total} = ${answer}`,
-    acceptedAnswers: [answer, `${favorable}/${total}`],
+    acceptedAnswers: unique([answer, `${favorable}/${total}`]),
     placeholder: "Probability",
     explanation: `Probability is favorable over total: ${answer}.`,
     hint: "Write favorable outcomes over total outcomes.",

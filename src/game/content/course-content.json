@@ -1556,7 +1556,7 @@
         "formulaFocus": [
           "7f = 91",
           "1/4 = 0.25",
-          "(3/9) / 4 = 3/36",
+          "(3/9) / 4 = 1/12",
           "2f = 20",
           "3/5 = 0.6",
           "4f = 16"
@@ -1690,10 +1690,10 @@
             "activity": {
               "kind": "input",
               "prompt": "Fraction Division Vault: Type the result of (3/9) / 4.",
-              "formula": "(3/9) / 4 = 3/36",
+              "formula": "(3/9) / 4 = 1/12",
               "acceptedAnswers": [
                 "3/36",
-                "3/36"
+                "1/12"
               ],
               "placeholder": "Fraction",
               "explanation": "Dividing by 4 multiplies the denominator by 4.",
@@ -1934,10 +1934,10 @@
             "activity": {
               "kind": "input",
               "prompt": "Fractions and Decimals Write Answer Drill: Type the result of (4/10) / 5.",
-              "formula": "(4/10) / 5 = 4/50",
+              "formula": "(4/10) / 5 = 2/25",
               "acceptedAnswers": [
                 "4/50",
-                "4/50"
+                "2/25"
               ],
               "placeholder": "Fraction",
               "explanation": "Dividing by 5 multiplies the denominator by 5.",
@@ -2057,7 +2057,6 @@
                   "prompt": "Fractions and Decimals Mixed Practice A Round 3: Type the result of (3/5) / 4.",
                   "formula": "(3/5) / 4 = 3/20",
                   "acceptedAnswers": [
-                    "3/20",
                     "3/20"
                   ],
                   "placeholder": "Fraction",
@@ -2094,8 +2093,8 @@
                       "label": "2.5"
                     },
                     {
-                      "id": "inverse",
-                      "label": "2.5"
+                      "id": "fallback-2",
+                      "label": "1.4"
                     }
                   ],
                   "correctChoiceId": "correct",
@@ -2107,7 +2106,6 @@
                   "prompt": "Fractions and Decimals Mixed Practice B Round 2: Type the result of (1/7) / 2.",
                   "formula": "(1/7) / 2 = 1/14",
                   "acceptedAnswers": [
-                    "1/14",
                     "1/14"
                   ],
                   "placeholder": "Fraction",
@@ -2232,15 +2230,15 @@
             "activity": {
               "kind": "composite",
               "prompt": "Fractions and Decimals Fluency Sprint: solve a mixed set of fresh fractions and decimals problems.",
-              "formula": "(4/6) / 5 = 4/30 • 7f = 91 • 1/4 = 0.25",
+              "formula": "(4/6) / 5 = 2/15 • 7f = 91 • 1/4 = 0.25",
               "rounds": [
                 {
                   "kind": "input",
                   "prompt": "Fractions and Decimals Fluency Sprint Round 1: Type the result of (4/6) / 5.",
-                  "formula": "(4/6) / 5 = 4/30",
+                  "formula": "(4/6) / 5 = 2/15",
                   "acceptedAnswers": [
                     "4/30",
-                    "4/30"
+                    "2/15"
                   ],
                   "placeholder": "Fraction",
                   "explanation": "Dividing by 5 multiplies the denominator by 5.",
@@ -2446,8 +2444,8 @@
                       "label": "2.5"
                     },
                     {
-                      "id": "inverse",
-                      "label": "2.5"
+                      "id": "fallback-2",
+                      "label": "1.4"
                     }
                   ],
                   "correctChoiceId": "correct",
@@ -2459,7 +2457,6 @@
                   "prompt": "Fractions and Decimals Checkpoint Round 3: Type the result of (1/3) / 2.",
                   "formula": "(1/3) / 2 = 1/6",
                   "acceptedAnswers": [
-                    "1/6",
                     "1/6"
                   ],
                   "placeholder": "Fraction",
@@ -2502,15 +2499,15 @@
             "activity": {
               "kind": "composite",
               "prompt": "Fractions and Decimals Mastery Challenge: solve a mixed set of fresh fractions and decimals problems.",
-              "formula": "(3/9) / 4 = 3/36 • 6f = 60 • 1/2 = 0.5 • (2/4) / 3 = 2/12",
+              "formula": "(3/9) / 4 = 1/12 • 6f = 60 • 1/2 = 0.5 • (2/4) / 3 = 1/6",
               "rounds": [
                 {
                   "kind": "input",
                   "prompt": "Fractions and Decimals Mastery Challenge Round 1: Type the result of (3/9) / 4.",
-                  "formula": "(3/9) / 4 = 3/36",
+                  "formula": "(3/9) / 4 = 1/12",
                   "acceptedAnswers": [
                     "3/36",
-                    "3/36"
+                    "1/12"
                   ],
                   "placeholder": "Fraction",
                   "explanation": "Dividing by 4 multiplies the denominator by 4.",
@@ -2615,10 +2612,10 @@
                 {
                   "kind": "input",
                   "prompt": "Fractions and Decimals Mastery Challenge Round 4: Type the result of (2/4) / 3.",
-                  "formula": "(2/4) / 3 = 2/12",
+                  "formula": "(2/4) / 3 = 1/6",
                   "acceptedAnswers": [
                     "2/12",
-                    "2/12"
+                    "1/6"
                   ],
                   "placeholder": "Fraction",
                   "explanation": "Dividing by 3 multiplies the denominator by 3.",
@@ -2728,8 +2725,8 @@
                       "label": "2.5"
                     },
                     {
-                      "id": "inverse",
-                      "label": "2.5"
+                      "id": "fallback-2",
+                      "label": "1.4"
                     }
                   ],
                   "correctChoiceId": "correct",
@@ -2741,7 +2738,6 @@
                   "prompt": "Fractions and Decimals Review Relay Round 3: Type the result of (1/4) / 2.",
                   "formula": "(1/4) / 2 = 1/8",
                   "acceptedAnswers": [
-                    "1/8",
                     "1/8"
                   ],
                   "placeholder": "Fraction",
@@ -2827,7 +2823,6 @@
                   "prompt": "Fractions and Decimals Review Relay Round 5: Type the result of (3/5) / 4.",
                   "formula": "(3/5) / 4 = 3/20",
                   "acceptedAnswers": [
-                    "3/20",
                     "3/20"
                   ],
                   "placeholder": "Fraction",
@@ -2951,7 +2946,6 @@
                   "prompt": "Fractions and Decimals Boss Exam Round 3: Type the result of (2/5) / 3.",
                   "formula": "(2/5) / 3 = 2/15",
                   "acceptedAnswers": [
-                    "2/15",
                     "2/15"
                   ],
                   "placeholder": "Fraction",
@@ -3046,8 +3040,8 @@
                       "label": "2.5"
                     },
                     {
-                      "id": "inverse",
-                      "label": "2.5"
+                      "id": "fallback-2",
+                      "label": "1.4"
                     }
                   ],
                   "correctChoiceId": "correct",
@@ -3059,7 +3053,6 @@
                   "prompt": "Fractions and Decimals Boss Exam Round 6: Type the result of (1/5) / 2.",
                   "formula": "(1/5) / 2 = 1/10",
                   "acceptedAnswers": [
-                    "1/10",
                     "1/10"
                   ],
                   "placeholder": "Fraction",
@@ -14300,7 +14293,6 @@
               "finalPrompt": "What is the solution for m?",
               "acceptedAnswers": [
                 "m > 14",
-                "m>14",
                 "m>14"
               ],
               "placeholder": "m > ?",
@@ -14479,7 +14471,6 @@
                   "finalPrompt": "What is the solution for m?",
                   "acceptedAnswers": [
                     "m < 9",
-                    "m<9",
                     "m<9"
                   ],
                   "placeholder": "m < ?",
@@ -14628,7 +14619,6 @@
               "finalPrompt": "What is the solution for m?",
               "acceptedAnswers": [
                 "m < 15",
-                "m<15",
                 "m<15"
               ],
               "placeholder": "m < ?",
@@ -14807,7 +14797,6 @@
                   "finalPrompt": "What is the solution for m?",
                   "acceptedAnswers": [
                     "m > 10",
-                    "m>10",
                     "m>10"
                   ],
                   "placeholder": "m > ?",
@@ -15007,7 +14996,6 @@
                   "finalPrompt": "What is the solution for m?",
                   "acceptedAnswers": [
                     "m < 11",
-                    "m<11",
                     "m<11"
                   ],
                   "placeholder": "m < ?",
@@ -15181,7 +15169,6 @@
                   "finalPrompt": "What is the solution for m?",
                   "acceptedAnswers": [
                     "m > 6",
-                    "m>6",
                     "m>6"
                   ],
                   "placeholder": "m > ?",
@@ -15335,7 +15322,6 @@
                   "finalPrompt": "What is the solution for m?",
                   "acceptedAnswers": [
                     "m > 12",
-                    "m>12",
                     "m>12"
                   ],
                   "placeholder": "m > ?",
@@ -15535,7 +15521,6 @@
                   "finalPrompt": "What is the solution for m?",
                   "acceptedAnswers": [
                     "m < 13",
-                    "m<13",
                     "m<13"
                   ],
                   "placeholder": "m < ?",
@@ -15701,7 +15686,6 @@
                   "finalPrompt": "What is the solution for m?",
                   "acceptedAnswers": [
                     "m > 8",
-                    "m>8",
                     "m>8"
                   ],
                   "placeholder": "m > ?",
@@ -15851,7 +15835,6 @@
                   "finalPrompt": "What is the solution for m?",
                   "acceptedAnswers": [
                     "m < 3",
-                    "m<3",
                     "m<3"
                   ],
                   "placeholder": "m < ?",
@@ -15995,7 +15978,6 @@
                   "finalPrompt": "What is the solution for m?",
                   "acceptedAnswers": [
                     "m < 9",
-                    "m<9",
                     "m<9"
                   ],
                   "placeholder": "m < ?",
@@ -16145,7 +16127,6 @@
                   "finalPrompt": "What is the solution for m?",
                   "acceptedAnswers": [
                     "m > 4",
-                    "m>4",
                     "m>4"
                   ],
                   "placeholder": "m > ?",
@@ -19810,7 +19791,6 @@
                   "prompt": "Probability and Sampling Mixed Practice B Round 2: Type the probability of drawing one of 5 marked cards from 12 cards.",
                   "formula": "5/12 = 5/12",
                   "acceptedAnswers": [
-                    "5/12",
                     "5/12"
                   ],
                   "placeholder": "Probability",
@@ -20179,12 +20159,12 @@
                       "label": "1/2"
                     },
                     {
-                      "id": "complement",
-                      "label": "1/2"
-                    },
-                    {
                       "id": "total",
                       "label": "8"
+                    },
+                    {
+                      "id": "fallback-2",
+                      "label": "Cannot be determined"
                     }
                   ],
                   "correctChoiceId": "correct",
@@ -20762,7 +20742,6 @@
                   "prompt": "Probability and Sampling Boss Exam Round 6: Type the probability of drawing one of 3 marked cards from 10 cards.",
                   "formula": "3/10 = 3/10",
                   "acceptedAnswers": [
-                    "3/10",
                     "3/10"
                   ],
                   "placeholder": "Probability",
@@ -23695,8 +23674,8 @@
                       "label": "9"
                     },
                     {
-                      "id": "run",
-                      "label": "3"
+                      "id": "fallback-2",
+                      "label": "4"
                     }
                   ],
                   "correctChoiceId": "correct",
@@ -24218,8 +24197,8 @@
                       "label": "9"
                     },
                     {
-                      "id": "run",
-                      "label": "3"
+                      "id": "fallback-2",
+                      "label": "4"
                     }
                   ],
                   "correctChoiceId": "correct",
@@ -24514,8 +24493,8 @@
                       "label": "9"
                     },
                     {
-                      "id": "run",
-                      "label": "3"
+                      "id": "fallback-2",
+                      "label": "4"
                     }
                   ],
                   "correctChoiceId": "correct",
@@ -24665,8 +24644,8 @@
                       "label": "2"
                     },
                     {
-                      "id": "run",
-                      "label": "2"
+                      "id": "fallback-2",
+                      "label": "0"
                     }
                   ],
                   "correctChoiceId": "correct",
@@ -25616,12 +25595,12 @@
                   "label": "(7, 7)"
                 },
                 {
-                  "id": "swap",
-                  "label": "(7, 7)"
-                },
-                {
                   "id": "negative",
                   "label": "(-7, 7)"
+                },
+                {
+                  "id": "fallback-2",
+                  "label": "Cannot be determined"
                 }
               ],
               "correctChoiceId": "correct",
@@ -29442,8 +29421,8 @@
                       "label": "8"
                     },
                     {
-                      "id": "add",
-                      "label": "8"
+                      "id": "fallback-2",
+                      "label": "11"
                     }
                   ],
                   "correctChoiceId": "correct",
@@ -33842,12 +33821,12 @@
                   "label": "negative association"
                 },
                 {
-                  "id": "positive",
+                  "id": "distractor-a",
                   "label": "positive association"
                 },
                 {
-                  "id": "negative",
-                  "label": "negative association"
+                  "id": "distractor-b",
+                  "label": "no association"
                 }
               ],
               "correctChoiceId": "correct",
@@ -33970,12 +33949,12 @@
                       "label": "negative association"
                     },
                     {
-                      "id": "positive",
+                      "id": "distractor-a",
                       "label": "positive association"
                     },
                     {
-                      "id": "negative",
-                      "label": "negative association"
+                      "id": "distractor-b",
+                      "label": "no association"
                     }
                   ],
                   "correctChoiceId": "correct",
@@ -34085,12 +34064,12 @@
                   "label": "positive association"
                 },
                 {
-                  "id": "positive",
-                  "label": "positive association"
+                  "id": "distractor-a",
+                  "label": "negative association"
                 },
                 {
-                  "id": "negative",
-                  "label": "negative association"
+                  "id": "distractor-b",
+                  "label": "no association"
                 }
               ],
               "correctChoiceId": "correct",
@@ -34213,12 +34192,12 @@
                       "label": "positive association"
                     },
                     {
-                      "id": "positive",
-                      "label": "positive association"
+                      "id": "distractor-a",
+                      "label": "negative association"
                     },
                     {
-                      "id": "negative",
-                      "label": "negative association"
+                      "id": "distractor-b",
+                      "label": "no association"
                     }
                   ],
                   "correctChoiceId": "correct",
@@ -34262,11 +34241,11 @@
                       "label": "no association"
                     },
                     {
-                      "id": "positive",
+                      "id": "distractor-a",
                       "label": "positive association"
                     },
                     {
-                      "id": "negative",
+                      "id": "distractor-b",
                       "label": "negative association"
                     }
                   ],
@@ -34380,11 +34359,11 @@
                   "label": "no association"
                 },
                 {
-                  "id": "positive",
+                  "id": "distractor-a",
                   "label": "positive association"
                 },
                 {
-                  "id": "negative",
+                  "id": "distractor-b",
                   "label": "negative association"
                 }
               ],
@@ -34500,11 +34479,11 @@
                       "label": "no association"
                     },
                     {
-                      "id": "positive",
+                      "id": "distractor-a",
                       "label": "positive association"
                     },
                     {
-                      "id": "negative",
+                      "id": "distractor-b",
                       "label": "negative association"
                     }
                   ],
@@ -34612,12 +34591,12 @@
                       "label": "negative association"
                     },
                     {
-                      "id": "positive",
+                      "id": "distractor-a",
                       "label": "positive association"
                     },
                     {
-                      "id": "negative",
-                      "label": "negative association"
+                      "id": "distractor-b",
+                      "label": "no association"
                     }
                   ],
                   "correctChoiceId": "correct",
@@ -34645,12 +34624,12 @@
                       "label": "positive association"
                     },
                     {
-                      "id": "positive",
-                      "label": "positive association"
+                      "id": "distractor-a",
+                      "label": "negative association"
                     },
                     {
-                      "id": "negative",
-                      "label": "negative association"
+                      "id": "distractor-b",
+                      "label": "no association"
                     }
                   ],
                   "correctChoiceId": "correct",
@@ -34768,12 +34747,12 @@
                       "label": "positive association"
                     },
                     {
-                      "id": "positive",
-                      "label": "positive association"
+                      "id": "distractor-a",
+                      "label": "negative association"
                     },
                     {
-                      "id": "negative",
-                      "label": "negative association"
+                      "id": "distractor-b",
+                      "label": "no association"
                     }
                   ],
                   "correctChoiceId": "correct",
@@ -34891,12 +34870,12 @@
                       "label": "positive association"
                     },
                     {
-                      "id": "positive",
-                      "label": "positive association"
+                      "id": "distractor-a",
+                      "label": "negative association"
                     },
                     {
-                      "id": "negative",
-                      "label": "negative association"
+                      "id": "distractor-b",
+                      "label": "no association"
                     }
                   ],
                   "correctChoiceId": "correct",
@@ -35099,11 +35078,11 @@
                       "label": "no association"
                     },
                     {
-                      "id": "positive",
+                      "id": "distractor-a",
                       "label": "positive association"
                     },
                     {
-                      "id": "negative",
+                      "id": "distractor-b",
                       "label": "negative association"
                     }
                   ],
@@ -35206,11 +35185,11 @@
                       "label": "no association"
                     },
                     {
-                      "id": "positive",
+                      "id": "distractor-a",
                       "label": "positive association"
                     },
                     {
-                      "id": "negative",
+                      "id": "distractor-b",
                       "label": "negative association"
                     }
                   ],
@@ -35329,11 +35308,11 @@
                       "label": "no association"
                     },
                     {
-                      "id": "positive",
+                      "id": "distractor-a",
                       "label": "positive association"
                     },
                     {
-                      "id": "negative",
+                      "id": "distractor-b",
                       "label": "negative association"
                     }
                   ],
@@ -35436,11 +35415,11 @@
                       "label": "no association"
                     },
                     {
-                      "id": "positive",
+                      "id": "distractor-a",
                       "label": "positive association"
                     },
                     {
-                      "id": "negative",
+                      "id": "distractor-b",
                       "label": "negative association"
                     }
                   ],
@@ -38139,7 +38118,6 @@
               "finalPrompt": "What is the solution for x?",
               "acceptedAnswers": [
                 "x > 7",
-                "x>7",
                 "x>7"
               ],
               "placeholder": "x > ?",
@@ -38318,7 +38296,6 @@
                   "finalPrompt": "What is the solution for x?",
                   "acceptedAnswers": [
                     "x < 2",
-                    "x<2",
                     "x<2"
                   ],
                   "placeholder": "x < ?",
@@ -38467,7 +38444,6 @@
               "finalPrompt": "What is the solution for x?",
               "acceptedAnswers": [
                 "x < 8",
-                "x<8",
                 "x<8"
               ],
               "placeholder": "x < ?",
@@ -38646,7 +38622,6 @@
                   "finalPrompt": "What is the solution for x?",
                   "acceptedAnswers": [
                     "x > 3",
-                    "x>3",
                     "x>3"
                   ],
                   "placeholder": "x > ?",
@@ -38846,7 +38821,6 @@
                   "finalPrompt": "What is the solution for x?",
                   "acceptedAnswers": [
                     "x < 4",
-                    "x<4",
                     "x<4"
                   ],
                   "placeholder": "x < ?",
@@ -39020,7 +38994,6 @@
                   "finalPrompt": "What is the solution for x?",
                   "acceptedAnswers": [
                     "x > 13",
-                    "x>13",
                     "x>13"
                   ],
                   "placeholder": "x > ?",
@@ -39174,7 +39147,6 @@
                   "finalPrompt": "What is the solution for x?",
                   "acceptedAnswers": [
                     "x > 5",
-                    "x>5",
                     "x>5"
                   ],
                   "placeholder": "x > ?",
@@ -39374,7 +39346,6 @@
                   "finalPrompt": "What is the solution for x?",
                   "acceptedAnswers": [
                     "x < 6",
-                    "x<6",
                     "x<6"
                   ],
                   "placeholder": "x < ?",
@@ -39540,7 +39511,6 @@
                   "finalPrompt": "What is the solution for x?",
                   "acceptedAnswers": [
                     "x > 15",
-                    "x>15",
                     "x>15"
                   ],
                   "placeholder": "x > ?",
@@ -39690,7 +39660,6 @@
                   "finalPrompt": "What is the solution for x?",
                   "acceptedAnswers": [
                     "x < 10",
-                    "x<10",
                     "x<10"
                   ],
                   "placeholder": "x < ?",
@@ -39834,7 +39803,6 @@
                   "finalPrompt": "What is the solution for x?",
                   "acceptedAnswers": [
                     "x < 2",
-                    "x<2",
                     "x<2"
                   ],
                   "placeholder": "x < ?",
@@ -39984,7 +39952,6 @@
                   "finalPrompt": "What is the solution for x?",
                   "acceptedAnswers": [
                     "x > 11",
-                    "x>11",
                     "x>11"
                   ],
                   "placeholder": "x > ?",
@@ -40150,7 +40117,6 @@
                   "finalPrompt": "What is the solution for x?",
                   "acceptedAnswers": [
                     "x < 6",
-                    "x<6",
                     "x<6"
                   ],
                   "placeholder": "x < ?",
@@ -40300,7 +40266,6 @@
                   "finalPrompt": "What is the solution for x?",
                   "acceptedAnswers": [
                     "x > 15",
-                    "x>15",
                     "x>15"
                   ],
                   "placeholder": "x > ?",
@@ -40450,7 +40415,6 @@
                   "finalPrompt": "What is the solution for x?",
                   "acceptedAnswers": [
                     "x < 10",
-                    "x<10",
                     "x<10"
                   ],
                   "placeholder": "x < ?",
@@ -42304,8 +42268,8 @@
                       "label": "8"
                     },
                     {
-                      "id": "add",
-                      "label": "8"
+                      "id": "fallback-2",
+                      "label": "11"
                     }
                   ],
                   "correctChoiceId": "correct",
@@ -43398,12 +43362,12 @@
                   "label": "(7, 7)"
                 },
                 {
-                  "id": "swap",
-                  "label": "(7, 7)"
-                },
-                {
                   "id": "negative",
                   "label": "(-7, 7)"
+                },
+                {
+                  "id": "fallback-2",
+                  "label": "Cannot be determined"
                 }
               ],
               "correctChoiceId": "correct",

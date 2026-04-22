@@ -29,6 +29,26 @@ function normalize(value) {
   return String(value).trim().toLowerCase().replace(/\s+/g, "");
 }
 
+function normalizeVisible(value) {
+  return String(value).trim().toLowerCase().replace(/\s+/g, " ");
+}
+
+function gcd(a, b) {
+  let left = Math.abs(a);
+  let right = Math.abs(b);
+  while (right) {
+    const next = left % right;
+    left = right;
+    right = next;
+  }
+  return left || 1;
+}
+
+function simplifyFraction(numerator, denominator) {
+  const divisor = gcd(numerator, denominator);
+  return `${numerator / divisor}/${denominator / divisor}`;
+}
+
 function collectActivities(lesson) {
   if (lesson.activity.kind === "composite") {
     return lesson.activity.rounds;
@@ -46,8 +66,11 @@ function validateActivity(activity, location) {
 
   if (activity.kind === "multiple-choice") {
     const choiceIds = new Set((activity.choices ?? []).map((choice) => choice.id));
+    const choiceLabels = (activity.choices ?? []).map((choice) => normalizeVisible(choice.label));
+    const duplicateLabels = choiceLabels.filter((label, index) => choiceLabels.indexOf(label) !== index);
     if ((activity.choices ?? []).length < 3) errors.push(`${location} needs at least 3 choices.`);
     if (!choiceIds.has(activity.correctChoiceId)) errors.push(`${location} correctChoiceId is missing from choices.`);
+    if (duplicateLabels.length > 0) errors.push(`${location} has duplicate visible choice labels.`);
     if (!activity.hint) errors.push(`${location} missing hint.`);
     return;
   }
@@ -56,6 +79,7 @@ function validateActivity(activity, location) {
     if (!Array.isArray(activity.acceptedAnswers) || activity.acceptedAnswers.length === 0) {
       errors.push(`${location} needs acceptedAnswers.`);
     }
+    validateAcceptedAnswers(activity, location);
     if (!activity.hint) errors.push(`${location} missing hint.`);
     return;
   }
@@ -64,6 +88,7 @@ function validateActivity(activity, location) {
     if (!Array.isArray(activity.acceptedAnswers) || activity.acceptedAnswers.length === 0) {
       errors.push(`${location} needs acceptedAnswers.`);
     }
+    validateAcceptedAnswers(activity, location);
     if (!Array.isArray(activity.stages) || activity.stages.length < 2) {
       errors.push(`${location} needs at least 2 equation stages.`);
     }
@@ -80,6 +105,27 @@ function validateActivity(activity, location) {
   }
 
   errors.push(`${location} has unknown activity kind ${activity.kind}.`);
+}
+
+function validateAcceptedAnswers(activity, location) {
+  const answers = activity.acceptedAnswers ?? [];
+  const trimmedAnswers = answers.map((answer) => String(answer).trim());
+  const duplicateAnswers = trimmedAnswers.filter((answer, index) => trimmedAnswers.indexOf(answer) !== index);
+  if (duplicateAnswers.length > 0) {
+    errors.push(`${location} has duplicate accepted answers.`);
+  }
+
+  const fractionMatch = activity.formula.match(/=\s*(-?\d+)\/(\d+)$/);
+  if (!fractionMatch) {
+    return;
+  }
+
+  const numerator = Number(fractionMatch[1]);
+  const denominator = Number(fractionMatch[2]);
+  const simplified = simplifyFraction(numerator, denominator);
+  if (simplified !== `${numerator}/${denominator}` && !trimmedAnswers.includes(simplified)) {
+    errors.push(`${location} accepts ${numerator}/${denominator} but not simplified answer ${simplified}.`);
+  }
 }
 
 for (const grade of curriculum) {
