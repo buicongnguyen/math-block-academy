@@ -9,6 +9,7 @@ A Phaser + TypeScript + Vite prototype for a middle-school math adventure that s
 - A browser-playable vertical slice with:
   - Grade selection
   - Chapter map
+  - A generated Quiz Arena for every chapter
   - Full-course lessons for every chapter
   - Generated guided workshops, practice drills, checkpoints, review relays, and boss exams for every chapter
   - Block-style equation puzzles in Phaser
@@ -49,10 +50,10 @@ npm run generate:content
 npm run validate:content
 ```
 
-The validator fails if a chapter has too few unique formulas or if one formula
-appears too often in the same chapter. It also checks that generated tricky
-questions have 2-4 thinking steps and that their computed answers match the
-stored correct answer.
+The validator fails if a chapter has too few unique formulas, lacks a Quiz
+Arena, or repeats one formula too often in the same chapter. It also checks that
+generated tricky questions have 2-4 thinking steps and that their computed
+answers match the stored correct answer.
 
 ## Preview the webpage build
 

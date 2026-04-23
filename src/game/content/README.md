@@ -24,9 +24,10 @@ npm run validate:content
 ```
 
 The generator keeps lesson IDs stable for saved progress while replacing repeated
-formula examples with deterministic variants. Later-stage lessons also receive
-tricky 2-4 step challenges. The validator checks IDs, answer references,
-equation stages, tricky-question answer verification, and chapter-level formula
-repetition.
+formula examples with deterministic variants. It also adds one selection-only
+Quiz Arena to every chapter, and later-stage lessons receive tricky 2-4 step
+challenges. The validator checks IDs, answer references, equation stages,
+chapter quiz coverage, tricky-question answer verification, and chapter-level
+formula repetition.
 
 Keep engine and UI logic out of this folder. Phaser rendering, scoring, progression, and save logic should continue to live under `src/game/scenes`, `src/game/systems`, and `src/game/ui`.

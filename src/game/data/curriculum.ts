@@ -84,7 +84,7 @@ export interface CompositeActivity {
 }
 
 export type LessonActivity = SimpleActivity | CompositeActivity;
-export type LessonCategory = "guided" | "practice" | "mastery" | "boss";
+export type LessonCategory = "guided" | "practice" | "mastery" | "quiz" | "boss";
 
 export interface Lesson {
   id: string;
@@ -100,6 +100,7 @@ export interface LevelPlan {
   guided: number;
   practice: number;
   mastery: number;
+  quiz: number;
   boss: number;
 }
 

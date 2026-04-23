@@ -651,6 +651,24 @@ button:disabled {
   margin: 14px 0;
 }
 
+.quiz-status {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.quiz-status span {
+  border-radius: 14px;
+  padding: 9px 10px;
+  background: rgba(143, 224, 196, 0.14);
+  border: 1px solid rgba(143, 224, 196, 0.22);
+  color: #dffff4;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-align: center;
+}
+
 .choice-button {
   background: rgba(143, 224, 196, 0.14);
   color: var(--text);
@@ -946,6 +964,10 @@ button:disabled {
   }
 
   .answer-form {
+    grid-template-columns: 1fr;
+  }
+
+  .quiz-status {
     grid-template-columns: 1fr;
   }
 

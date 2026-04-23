@@ -454,6 +454,7 @@ function renderActivity(view: SessionViewModel): string {
         <h3>${view.activeLesson.title}</h3>
         <p>${view.activeLesson.prompt}</p>
         <p class="formula-callout">${view.activeLesson.formula}</p>
+        ${renderQuizStats(view)}
         <div class="skill-row">
           <span class="pill">${view.activeLesson.roundLabel}</span>
         </div>
@@ -506,6 +507,20 @@ function renderActivity(view: SessionViewModel): string {
         <button class="ghost-button" data-hint="true">Hint</button>
         <span class="meta-text">${view.activeLesson.stepLabel} • ${view.activeLesson.hintLabel}</span>
       </div>
+    </div>
+  `;
+}
+
+function renderQuizStats(view: SessionViewModel): string {
+  if (!view.activeLesson?.quizStats) {
+    return "";
+  }
+
+  return `
+    <div class="quiz-status">
+      <span>${view.activeLesson.quizStats.progressLabel}</span>
+      <span>${view.activeLesson.quizStats.streakLabel}</span>
+      <span>${view.activeLesson.quizStats.energyLabel}</span>
     </div>
   `;
 }

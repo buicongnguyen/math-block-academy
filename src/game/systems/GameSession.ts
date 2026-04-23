@@ -10,6 +10,7 @@ import type {
   Lesson,
   LessonActivity,
   LessonCategory,
+  LevelPlan,
 } from "../data/curriculum";
 
 export type MasteryBand = "Mastery" | "Proficient" | "Developing" | "Review";
@@ -34,6 +35,7 @@ interface ActiveLessonRuntime {
   lessonId: string;
   incorrectAttempts: number;
   hintsUsed: number;
+  correctStreak: number;
   feedback: string;
   equationStageIndex: number;
   compositeRoundIndex: number;
@@ -138,6 +140,11 @@ export interface SessionViewModel {
     roundLabel: string;
     feedback: string;
     hintLabel: string;
+    quizStats?: {
+      progressLabel: string;
+      streakLabel: string;
+      energyLabel: string;
+    };
     completed: boolean;
   } | null;
   reportCard: {
@@ -260,6 +267,7 @@ export class GameSession {
       lessonId: location.lesson.id,
       incorrectAttempts: 0,
       hintsUsed: 0,
+      correctStreak: 0,
       feedback: this.getInitialFeedback(this.getInitialPlayableActivity(location.lesson.activity)),
       equationStageIndex: 0,
       compositeRoundIndex: 0,
@@ -303,13 +311,18 @@ export class GameSession {
     }
 
     if (choiceId === activity.correctChoiceId) {
-      runtime.feedback = activity.explanation;
-      this.advanceAfterCorrectAnswer(lesson, runtime);
+      runtime.correctStreak += 1;
+      const successFeedback = this.getChoiceSuccessFeedback(lesson, activity, runtime);
+      runtime.feedback = successFeedback;
+      this.advanceAfterCorrectAnswer(lesson, runtime, successFeedback);
       return;
     }
 
     runtime.incorrectAttempts += 1;
-    runtime.feedback = `Not yet. ${activity.hint}`;
+    if (lesson.category === "quiz") {
+      runtime.correctStreak = 0;
+    }
+    runtime.feedback = this.getChoiceMissFeedback(lesson, activity);
   }
 
   submitTextAnswer(inputValue: string): void {
@@ -450,7 +463,7 @@ export class GameSession {
       },
       chapterCards: selectedGrade.chapters.map((chapter, chapterIndex) => {
         const results = chapter.lessons.map((lesson) => this.results.get(lesson.id)).filter(Boolean) as LessonResult[];
-        const totalPlanned = chapter.levelPlan.guided + chapter.levelPlan.practice + chapter.levelPlan.mastery + chapter.levelPlan.boss;
+        const totalPlanned = totalLevelCount(chapter.levelPlan);
         return {
           id: chapter.id,
           title: chapter.title,
@@ -479,7 +492,7 @@ export class GameSession {
       },
       learningTree: selectedGrade.chapters.map((chapter, chapterIndex) => {
         const results = chapter.lessons.map((lesson) => this.results.get(lesson.id)).filter(Boolean) as LessonResult[];
-        const totalPlanned = chapter.levelPlan.guided + chapter.levelPlan.practice + chapter.levelPlan.mastery + chapter.levelPlan.boss;
+        const totalPlanned = totalLevelCount(chapter.levelPlan);
 
         return {
           id: chapter.id,
@@ -531,12 +544,13 @@ export class GameSession {
             roundLabel: this.getRoundLabel(activeLesson, runtime),
             feedback: runtime.feedback,
             hintLabel: runtime.hintsUsed > 0 ? "Hint shown in feedback" : "Hint available",
+            quizStats: activeLesson.category === "quiz" ? this.getQuizStats(activeLesson, runtime) : undefined,
             completed: runtime.completed,
           }
         : null,
       reportCard: activeReport
         ? {
-            title: activeLesson?.category === "boss" ? "Boss Exam Report" : "Lesson Report Card",
+            title: activeLesson?.category === "boss" ? "Boss Exam Report" : activeLesson?.category === "quiz" ? "Chapter Quiz Report" : "Lesson Report Card",
             body: activeReport.summary,
             scoreLabel: `Score ${activeReport.score}`,
             masteryLabel: activeReport.band,
@@ -569,14 +583,14 @@ export class GameSession {
     };
   }
 
-  private advanceAfterCorrectAnswer(lesson: Lesson, runtime: ActiveLessonRuntime): void {
+  private advanceAfterCorrectAnswer(lesson: Lesson, runtime: ActiveLessonRuntime, transitionFeedback?: string): void {
     if (lesson.activity.kind === "composite") {
       const nextRoundIndex = runtime.compositeRoundIndex + 1;
 
       if (nextRoundIndex < lesson.activity.rounds.length) {
         runtime.compositeRoundIndex = nextRoundIndex;
         runtime.equationStageIndex = 0;
-        runtime.feedback = this.getInitialFeedback(lesson.activity.rounds[nextRoundIndex]);
+        runtime.feedback = transitionFeedback ?? this.getInitialFeedback(lesson.activity.rounds[nextRoundIndex]);
         return;
       }
     }
@@ -781,6 +795,35 @@ export class GameSession {
     return activity.explanation;
   }
 
+  private getChoiceSuccessFeedback(lesson: Lesson, activity: ChoiceActivity, runtime: ActiveLessonRuntime): string {
+    if (lesson.category !== "quiz") {
+      return activity.explanation;
+    }
+
+    const streakBonus = runtime.correctStreak >= 3 ? " Streak boost active." : "";
+    return `${activity.explanation} Quiz streak ${runtime.correctStreak}.${streakBonus}`;
+  }
+
+  private getChoiceMissFeedback(lesson: Lesson, activity: ChoiceActivity): string {
+    if (lesson.category !== "quiz") {
+      return `Not yet. ${activity.hint}`;
+    }
+
+    return `Not yet. Quiz streak reset. ${activity.hint}`;
+  }
+
+  private getQuizStats(lesson: Lesson, runtime: ActiveLessonRuntime): { progressLabel: string; streakLabel: string; energyLabel: string } {
+    const totalRounds = lesson.activity.kind === "composite" ? lesson.activity.rounds.length : 1;
+    const currentRound = runtime.completed ? totalRounds : Math.min(runtime.compositeRoundIndex + 1, totalRounds);
+    const energy = Math.min(100, runtime.correctStreak * 20);
+
+    return {
+      progressLabel: `Question ${currentRound} of ${totalRounds}`,
+      streakLabel: `Streak ${runtime.correctStreak}`,
+      energyLabel: `Quiz energy ${energy}%`,
+    };
+  }
+
   private getActivePrompt(activity: PlayableActivity, equationStageIndex: number): string {
     if (activity.kind === "equation-balance") {
       const stage = activity.stages[equationStageIndex] ?? activity.stages[activity.stages.length - 1];
@@ -880,8 +923,10 @@ export class GameSession {
     return {
       stepLabel: "Step 4 of 5",
       title: "Answer in the Lesson Desk",
-      body: currentActivity.kind === "multiple-choice"
-        ? "Choose the best answer in the lesson desk."
+      body: activeLesson.category === "quiz"
+        ? "Choose answers to build quiz energy. A wrong answer resets the streak, but you can try again."
+        : currentActivity.kind === "multiple-choice"
+          ? "Choose the best answer in the lesson desk."
         : "Type the answer in the lesson desk, then submit it.",
       area: "activity",
     };
@@ -908,6 +953,10 @@ function averageScore(results: LessonResult[]): number | null {
 
 function completionLabel(done: number, total: number): string {
   return `${done}/${total} lessons completed`;
+}
+
+function totalLevelCount(levelPlan: LevelPlan): number {
+  return levelPlan.guided + levelPlan.practice + levelPlan.mastery + (levelPlan.quiz ?? 0) + levelPlan.boss;
 }
 
 function lessonStatusLabel(result: LessonResult | undefined): string {
@@ -950,6 +999,8 @@ function categoryLabel(category: LessonCategory): string {
       return "Guided";
     case "mastery":
       return "Mastery";
+    case "quiz":
+      return "Quiz";
     case "boss":
       return "Boss";
     default:

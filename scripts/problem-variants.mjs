@@ -36,6 +36,8 @@ export function applyProblemVariants(curriculum, problemBank) {
         continue;
       }
 
+      ensureChapterQuizLesson(chapter);
+
       let serial = 0;
       for (const lesson of chapter.lessons) {
         lesson.activity = rebuildActivity(lesson.activity, bank, chapter, lesson, () => serial++);
@@ -62,10 +64,59 @@ function rebuildActivity(activity, bank, chapter, lesson, nextSerial) {
 
   return {
     ...activity,
-    prompt: `${lesson.title}: solve a mixed set of fresh ${bank.label} problems.`,
-    formula: rounds.map((round) => round.formula).join(" • "),
+    prompt: lesson.category === "quiz"
+      ? `${lesson.title}: build quiz energy by choosing the best answer for each ${bank.label} question.`
+      : `${lesson.title}: solve a mixed set of fresh ${bank.label} problems.`,
+    formula: lesson.category === "quiz" ? `Quiz mix: ${rounds.map((round) => round.formula).join(" • ")}` : rounds.map((round) => round.formula).join(" • "),
     rounds,
-    explanation: `Great work. This mixed lesson used varied ${bank.label} problems instead of repeating the same examples.`,
+    explanation: lesson.category === "quiz"
+      ? `Quiz clear. You answered a fast selection set across ${bank.label} ideas.`
+      : `Great work. This mixed lesson used varied ${bank.label} problems instead of repeating the same examples.`,
+  };
+}
+
+function ensureChapterQuizLesson(chapter) {
+  const quizId = `${chapter.id}-quiz-arena`;
+  const quizLesson = createChapterQuizLesson(chapter, quizId);
+  const existingIndex = chapter.lessons.findIndex((lesson) => lesson.id === quizId || lesson.category === "quiz");
+
+  chapter.levelPlan = {
+    ...chapter.levelPlan,
+    quiz: 1,
+  };
+
+  if (existingIndex >= 0) {
+    chapter.lessons[existingIndex] = quizLesson;
+    return;
+  }
+
+  const bossIndex = chapter.lessons.findIndex((lesson) => lesson.category === "boss");
+  chapter.lessons.splice(bossIndex >= 0 ? bossIndex : chapter.lessons.length, 0, quizLesson);
+}
+
+function createChapterQuizLesson(chapter, quizId) {
+  return {
+    id: quizId,
+    title: `${chapter.title} Quiz Arena`,
+    objective: `Play a quick selection quiz that reviews the core ideas in ${chapter.title}.`,
+    modeLabel: "Quiz Arena",
+    estimatedMinutes: 7,
+    category: "quiz",
+    activity: {
+      kind: "composite",
+      prompt: `${chapter.title} Quiz Arena: choose the best answer in each round.`,
+      formula: "Chapter quiz selection set",
+      rounds: Array.from({ length: 6 }, () => ({
+        kind: "multiple-choice",
+        prompt: "Choose the best answer.",
+        formula: "Chapter quiz selection",
+        choices: [choice("correct", "Ready"), choice("near-a", "Almost"), choice("near-b", "Check again")],
+        correctChoiceId: "correct",
+        explanation: "Correct selection.",
+        hint: "Use the chapter pattern to eliminate distractors.",
+      })),
+      explanation: "Quiz clear. Review your report card, then keep practicing or try the boss exam.",
+    },
   };
 }
 

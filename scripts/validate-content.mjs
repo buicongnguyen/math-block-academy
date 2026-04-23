@@ -5,11 +5,13 @@ const contentPath = path.join(process.cwd(), "src/game/content/course-content.js
 const curriculum = JSON.parse(fs.readFileSync(contentPath, "utf8"));
 const errors = [];
 const seenIds = new Set();
+const validCategories = new Set(["guided", "practice", "mastery", "quiz", "boss"]);
 const stats = {
   grades: curriculum.length,
   chapters: 0,
   lessons: 0,
   activities: 0,
+  quizzes: 0,
   trickyActivities: 0,
 };
 
@@ -169,6 +171,24 @@ function validateTrickyChallenge(activity, location) {
   }
 }
 
+function validateQuizLesson(lesson, location) {
+  if (lesson.activity.kind !== "composite") {
+    errors.push(`${location} quiz must be a composite selection game.`);
+    return;
+  }
+
+  const rounds = lesson.activity.rounds ?? [];
+  if (rounds.length < 4) {
+    errors.push(`${location} quiz needs at least 4 selection rounds.`);
+  }
+
+  rounds.forEach((round, index) => {
+    if (round.kind !== "multiple-choice") {
+      errors.push(`${location} quiz round ${index + 1} must be multiple-choice.`);
+    }
+  });
+}
+
 function evaluateNumericExpression(expression, location) {
   if (!/^[\d+\-*/().\s]+$/.test(expression)) {
     errors.push(`${location} verification expression has unsupported characters.`);
@@ -197,9 +217,20 @@ for (const grade of curriculum) {
 
     const formulas = [];
     let chapterTrickyActivities = 0;
+    let chapterQuizLessons = 0;
     for (const lesson of chapter.lessons ?? []) {
       stats.lessons += 1;
       mark(lesson.id, "lesson");
+
+      if (!validCategories.has(lesson.category)) {
+        errors.push(`${lesson.id} has unknown lesson category ${lesson.category}.`);
+      }
+
+      if (lesson.category === "quiz") {
+        stats.quizzes += 1;
+        chapterQuizLessons += 1;
+        validateQuizLesson(lesson, lesson.id);
+      }
 
       const activities = collectActivities(lesson);
       activities.forEach((activity, index) => {
@@ -227,6 +258,10 @@ for (const grade of curriculum) {
 
     if (chapterTrickyActivities < 4) {
       errors.push(`${chapter.id} only has ${chapterTrickyActivities} tricky activities; expected at least 4.`);
+    }
+
+    if (chapterQuizLessons < 1) {
+      errors.push(`${chapter.id} does not include a chapter quiz.`);
     }
   }
 }
