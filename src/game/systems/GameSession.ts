@@ -311,10 +311,12 @@ export class GameSession {
     }
 
     if (choiceId === activity.correctChoiceId) {
-      runtime.correctStreak += 1;
+      if (lesson.category === "quiz") {
+        runtime.correctStreak += 1;
+      }
       const successFeedback = this.getChoiceSuccessFeedback(lesson, activity, runtime);
       runtime.feedback = successFeedback;
-      this.advanceAfterCorrectAnswer(lesson, runtime, successFeedback);
+      this.advanceAfterCorrectAnswer(lesson, runtime, lesson.category === "quiz" ? successFeedback : undefined);
       return;
     }
 
