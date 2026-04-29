@@ -41,6 +41,7 @@ export function applyProblemVariants(curriculum, problemBank) {
       let serial = 0;
       for (const lesson of chapter.lessons) {
         lesson.activity = rebuildActivity(lesson.activity, bank, chapter, lesson, () => serial++);
+        lesson.estimatedMinutes = Math.max(lesson.estimatedMinutes ?? 0, estimateLessonMinutes(lesson));
       }
 
       const uniqueFormulas = collectActivities(chapter)
@@ -54,16 +55,18 @@ export function applyProblemVariants(curriculum, problemBank) {
 }
 
 function rebuildActivity(activity, bank, chapter, lesson, nextSerial) {
-  if (activity.kind !== "composite") {
-    return makeActivity(activity.kind, bank, chapter, lesson, nextSerial(), lesson.title);
-  }
-
-  const rounds = activity.rounds.map((round, roundIndex) =>
-    makeActivity(round.kind, bank, chapter, lesson, nextSerial(), `${lesson.title} Round ${roundIndex + 1}`),
+  const roundKinds = collectRoundKinds(activity);
+  const targetRounds = targetRoundCount(lesson, roundKinds.length);
+  const rounds = Array.from({ length: targetRounds }, (_, roundIndex) =>
+    makeActivity(roundKinds[roundIndex % roundKinds.length], bank, chapter, lesson, nextSerial(), `${lesson.title} Round ${roundIndex + 1}`),
   );
 
+  if (targetRounds === 1) {
+    return rounds[0];
+  }
+
   return {
-    ...activity,
+    kind: "composite",
     prompt: lesson.category === "quiz"
       ? `${lesson.title}: build quiz energy by choosing the best answer for each ${bank.label} question.`
       : `${lesson.title}: solve a mixed set of fresh ${bank.label} problems.`,
@@ -118,6 +121,53 @@ function createChapterQuizLesson(chapter, quizId) {
       explanation: "Quiz clear. Review your report card, then keep practicing or try the boss exam.",
     },
   };
+}
+
+function collectRoundKinds(activity) {
+  if (activity.kind === "composite") {
+    return activity.rounds.map((round) => round.kind);
+  }
+
+  return [activity.kind];
+}
+
+function targetRoundCount(lesson, existingRoundCount) {
+  const baseline = (() => {
+    switch (lesson.category) {
+      case "guided":
+        return 4;
+      case "practice":
+        return 5;
+      case "mastery":
+        return 6;
+      case "quiz":
+        return 8;
+      case "boss":
+        return 7;
+      default:
+        return 4;
+    }
+  })();
+
+  return Math.max(existingRoundCount, baseline);
+}
+
+function estimateLessonMinutes(lesson) {
+  const rounds = lesson.activity.kind === "composite" ? lesson.activity.rounds.length : 1;
+  switch (lesson.category) {
+    case "guided":
+      return rounds + 3;
+    case "practice":
+      return rounds + 3;
+    case "mastery":
+      return rounds + 4;
+    case "quiz":
+      return rounds + 2;
+    case "boss":
+      return rounds + 5;
+    default:
+      return rounds + 3;
+  }
 }
 
 function makeActivity(kind, bank, chapter, lesson, seed, prefix) {
